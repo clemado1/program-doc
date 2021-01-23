@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.min.css"
+    />
+    <!-- Editor's Style -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+</head>
+<body>
+    <form action="/doc/save" method="post">
+        <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+        <input type="hidden" id="docId" name="docId" />
+        <input
+            type="hidden"
+            th:name="${_csrf.parameterName}"
+            th:value="${_csrf.token}" />
+        <h1>writeform</h1>
+        <input type="text" id="title" name="title" placeholder="title" />
+        version: <input type="number" id="version" name="version" step="0.01" value="1.00"/>
+        <input type="text" id="menuCd" name="menuCd" placeholder="menuCd" />
+        <div id="editor"></div>
+        <script>
+            const Editor = toastui.Editor;
+            const editor = new Editor({
+                el: document.querySelector('#editor'),
+                height: '600px',
+                initialEditType: 'markdown',
+                previewStyle: 'vertical'
+            });
+
+            editor.getHtml();
+        </script>
+        <input type="hidden" id="contents" name="contents">
+        <button type="submit" id="form-submit" th:text="Save"></button>
+    </form>
+    <script>
+        const saveBtn = document.querySelector("#form-submit");
+        saveBtn.addEventListener('click', function() {
+            let contents = document.querySelector("#contents");
+            contents.value = editor.getMarkdown(); //markdown 저장
+        });
+    </script>
+</body>
+</html>
