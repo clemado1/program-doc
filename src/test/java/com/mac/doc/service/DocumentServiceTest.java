@@ -2,10 +2,11 @@ package com.mac.doc.service;
 
 import com.mac.doc.domain.Document;
 import com.mac.doc.domain.Label;
-import com.mac.doc.domain.Menu;
+import com.mac.doc.domain.Program;
 import com.mac.doc.domain.type.DocStat;
 import com.mac.doc.repository.DocumentRepository;
 import com.mac.doc.repository.LabelRepository;
+import com.mac.doc.repository.ProgramRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Transactional
@@ -32,6 +32,12 @@ class DocumentServiceTest {
     @Autowired
     LabelRepository labelRepository;
 
+    @Autowired
+    ProgramService programService;
+
+    @Autowired
+    ProgramRepository programRepository;
+
     @Test
     void saveDocument() {
         Set<Label> labelSet = new HashSet<>();
@@ -40,8 +46,8 @@ class DocumentServiceTest {
         labelSet.add(label1);
         labelSet.add(label2);
 
-        Menu menu = Menu.builder().menuCd("COM10").menuNm("TEST").build();
-        Document doc = Document.builder().docStat(DocStat.TEMPSAVE).menu(menu).title("title1").contents("content1").label(labelSet).build();
+        Program program = Program.builder().programCd("COM10").programNm("TEST").build();
+        Document doc = Document.builder().docStat(DocStat.TEMPSAVE).program(program).title("title1").contents("content1").label(labelSet).build();
 
         Document newdoc = documentService.saveDocument(doc);
 
@@ -58,5 +64,6 @@ class DocumentServiceTest {
 
     @Test
     void findDocuments() {
+        programRepository.findAll();
     }
 }

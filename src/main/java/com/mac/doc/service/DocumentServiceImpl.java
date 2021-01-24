@@ -1,7 +1,6 @@
 package com.mac.doc.service;
 
 import com.mac.doc.domain.Document;
-import com.mac.doc.domain.User;
 import com.mac.doc.repository.DocumentRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +11,8 @@ import java.util.Optional;
 public class DocumentServiceImpl implements DocumentService {
     private final DocumentRepository documentRepository;
 
-    private final UserService userService;
-
-    public DocumentServiceImpl(DocumentRepository documentRepository, UserService userService) {
+    public DocumentServiceImpl(DocumentRepository documentRepository) {
         this.documentRepository = documentRepository;
-        this.userService = userService;
     }
 
     @Override
@@ -25,13 +21,13 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public boolean validateWriter(String menuCd) {
+    public boolean validateWriter(String programCd) {
         // TODO: 체크인 유저 검사
         return true;
     }
 
     @Override
-    public boolean checkInProgram(String menuCd) {
+    public boolean checkInProgram(String programCd) {
         return false;
     }
 

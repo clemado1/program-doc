@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface DocumentService {
     Document saveDocument(Document doc);
 
-    boolean validateWriter(String menuCd);
+    boolean validateWriter(String programCd);
 
-    boolean checkInProgram(String menuCd);
+    boolean checkInProgram(String programCd);
 
     Document updateDocument(Document doc);
 

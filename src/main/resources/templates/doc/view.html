@@ -1,10 +1,25 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-
+<form>
+    <input type="hidden" th:id="contents" th:name="contents" th:value="${document.contents}">
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-viewer.min.js"></script>
+    <div id="viewer">
+        <strong>Loading...</strong>
+    </div>
+    <script>
+        let content = document.querySelector("#contents").value;
+        const Editor = toastui.Editor;
+        const viewer = new Editor({
+            el: document.querySelector('#viewer'),
+            initialValue: content
+        });
+    </script>
+</form>
 </body>
 </html>

@@ -32,9 +32,9 @@ public class Document extends Base {
 
     private Double version = 1.0;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "menu_cd")
-    private Menu menu;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @JoinColumn(name = "program_cd")
+    private Program program;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "doc_label",
@@ -44,12 +44,12 @@ public class Document extends Base {
     private Set<Label> label = new HashSet<>();
 
     @Builder
-    public Document(Menu menu, DocStat docStat, String title, String contents, double version, Set<Label> label) {
-        Assert.notNull(menu, "menu must not be empty");
+    public Document(Program program, DocStat docStat, String title, String contents, double version, Set<Label> label) {
+        Assert.notNull(program, "program must not be empty");
         Assert.notNull(docStat, "docStat must not be null");
         Assert.hasText(title, "title must not be null");
 
-        this.menu = menu;
+        this.program = program;
         this.docStat = docStat;
         this.title = title;
         this.contents = contents;

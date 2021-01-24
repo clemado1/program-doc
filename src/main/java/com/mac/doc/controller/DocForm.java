@@ -5,9 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DocDto {
+public class DocForm {
     private String title;
     private String contents;
     private Double version;
-    private String menuCd;
+    private String programCd;
 }
