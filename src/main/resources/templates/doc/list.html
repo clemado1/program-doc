@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>List</title>
@@ -13,7 +12,7 @@
                 <th:block th:if="${program.documents != null && #lists.size(program.documents) > 0}">
                     <ul>
                         <li th:each="document : ${program.documents}">
-                            <a th:text="${document.title}" th:href="@{/doc/view/${document.docId}}"></a>
+                            <a th:text="${document.title}" th:href="@{/doc/view/{id}(id=${document.docId})}"></a>
                         </li>
                     </ul>
                 </th:block>

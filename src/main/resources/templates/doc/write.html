@@ -1,19 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.48.4/codemirror.min.css"
-    />
-    <!-- Editor's Style -->
-    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/doc_common :: docHead"><title></title></head>
 <body>
+    <div th:replace="fragments/doc_common :: docBody"></div>
     <form th:action="@{/doc/save}" method="post">
-        <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
         <input type="hidden" id="docId" name="docId" />
         <h1>writeform</h1>
         <input type="text" id="title" name="title" placeholder="title" />
@@ -22,11 +12,13 @@
         <div id="editor"></div>
         <script>
             const Editor = toastui.Editor;
+            const codeSyntaxHighlight = Editor.plugin.codeSyntaxHighlight;
             const editor = new Editor({
                 el: document.querySelector('#editor'),
                 height: '600px',
                 initialEditType: 'markdown',
-                previewStyle: 'vertical'
+                previewStyle: 'vertical',
+                plugins: [codeSyntaxHighlight]
             });
 
             editor.getHtml();
