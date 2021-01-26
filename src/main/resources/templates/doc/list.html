@@ -5,19 +5,19 @@
     <title>List</title>
 </head>
 <body>
-    <div class="container">
-        <ul>
-            <li th:each="program : ${programs}">
-                <span th:text="|[${program.programCd}]${program.programNm}|"></span>
-                <th:block th:if="${program.documents != null && #lists.size(program.documents) > 0}">
-                    <ul>
-                        <li th:each="document : ${program.documents}">
-                            <a th:text="${document.title}" th:href="@{/doc/view/{id}(id=${document.docId})}"></a>
-                        </li>
-                    </ul>
-                </th:block>
-            </li>
-        </ul>
-    </div>
+<div class="container">
+    <ul>
+        <li th:each="program : ${programs}">
+            <span th:text="|[${program.programCd}]${program.programNm}|"></span>
+            <th:block th:if="${program.documents != null && #lists.size(program.documents) > 0}">
+                <ul>
+                    <li th:each="document : ${program.documents}">
+                        <a th:href="@{/doc/view/{id}(id=${document.docId})}" th:text="${document.title}"></a>
+                    </li>
+                </ul>
+            </th:block>
+        </li>
+    </ul>
+</div>
 </body>
 </html>

@@ -2,36 +2,36 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/doc_common :: docHead"><title></title></head>
 <body>
-    <div th:replace="fragments/doc_common :: docBody"></div>
-    <form th:action="@{/doc/save}" method="post">
-        <input type="hidden" id="docId" name="docId" />
-        <h1>writeform</h1>
-        <input type="text" id="title" name="title" placeholder="title" />
-        version: <input type="number" id="version" name="version" step="0.01" value="1.00"/>
-        <input type="text" id="programCd" name="programCd" placeholder="programCd" />
-        <div id="editor"></div>
-        <script>
-            const Editor = toastui.Editor;
-            const codeSyntaxHighlight = Editor.plugin.codeSyntaxHighlight;
-            const editor = new Editor({
-                el: document.querySelector('#editor'),
-                height: '600px',
-                initialEditType: 'markdown',
-                previewStyle: 'vertical',
-                plugins: [codeSyntaxHighlight]
-            });
-
-            editor.getHtml();
-        </script>
-        <input type="hidden" id="contents" name="contents">
-        <button type="submit" id="form-submit" th:text="Save"></button>
-    </form>
+<div th:replace="fragments/doc_common :: docBody"></div>
+<form method="post" th:action="@{/doc/save}">
+    <input id="docId" name="docId" type="hidden"/>
+    <h1>writeform</h1>
+    <input id="title" name="title" placeholder="title" type="text"/>
+    version: <input id="version" name="version" step="0.01" type="number" value="1.00"/>
+    <input id="programCd" name="programCd" placeholder="programCd" type="text"/>
+    <div id="editor"></div>
     <script>
-        const saveBtn = document.querySelector("#form-submit");
-        saveBtn.addEventListener('click', function() {
-            let contents = document.querySelector("#contents");
-            contents.value = editor.getMarkdown(); //markdown 저장
+        const Editor = toastui.Editor;
+        const codeSyntaxHighlight = Editor.plugin.codeSyntaxHighlight;
+        const editor = new Editor({
+            el: document.querySelector('#editor'),
+            height: '600px',
+            initialEditType: 'markdown',
+            previewStyle: 'vertical',
+            plugins: [codeSyntaxHighlight]
         });
+
+        editor.getHtml();
     </script>
+    <input id="contents" name="contents" type="hidden">
+    <button id="form-submit" th:text="Save" type="submit"></button>
+</form>
+<script>
+    const saveBtn = document.querySelector("#form-submit");
+    saveBtn.addEventListener('click', function () {
+        let contents = document.querySelector("#contents");
+        contents.value = editor.getMarkdown(); //markdown 저장
+    });
+</script>
 </body>
 </html>

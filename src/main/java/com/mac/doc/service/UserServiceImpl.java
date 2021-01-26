@@ -8,7 +8,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,13 +17,12 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    @Resource
+    private Session session;
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
-    @Resource
-    private Session session;
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {

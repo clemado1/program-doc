@@ -4,7 +4,7 @@
 <body>
 <div th:replace="fragments/doc_common :: docBody"></div>
 <form>
-    <input type="hidden" th:id="contents" th:name="contents" th:value="${document.contents}">
+    <input th:id="contents" th:name="contents" th:value="${document.contents}" type="hidden">
     <h1 th:text="${document.title}"></h1>
     <div id="viewer">
         <strong>Loading...</strong>

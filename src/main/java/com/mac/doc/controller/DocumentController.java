@@ -26,7 +26,6 @@ public class DocumentController {
         this.programService = programService;
     }
 
-
     @GetMapping("/doc/write")
     public String writeForm() {
         return "/doc/write";
@@ -48,7 +47,7 @@ public class DocumentController {
 
         documentService.saveDocument(document);
 
-        return "redirect:/doc/view/"+document.getDocId();
+        return "redirect:/doc/view/" + document.getDocId();
     }
 
     @GetMapping("/doc/view/{docId}")
