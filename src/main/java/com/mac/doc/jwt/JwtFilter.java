@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public class JwtFilter extends GenericFilterBean {
-    private static final String AUTHORITIES_HEADER = "Authorization";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
     private final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
     private TokenProvider tokenProvider;
 

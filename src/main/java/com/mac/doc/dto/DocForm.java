@@ -1,4 +1,4 @@
-package com.mac.doc.controller;
+package com.mac.doc.dto;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -3,6 +3,7 @@ package com.mac.doc.controller;
 import com.mac.doc.domain.Document;
 import com.mac.doc.domain.Program;
 import com.mac.doc.domain.type.DocStat;
+import com.mac.doc.dto.DocForm;
 import com.mac.doc.service.DocumentService;
 import com.mac.doc.service.ProgramService;
 import org.springframework.beans.factory.annotation.Autowired;

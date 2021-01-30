@@ -1,5 +1,6 @@
 package com.mac.doc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.util.Assert;
@@ -23,7 +24,10 @@ public class User implements Serializable {
 
     private String userNm;
 
+    @JsonIgnore
     private String passwd;
+
+    // TO-DO: 사용자 권한
 
     @Builder
     public User(String userId, String userNm) {
