@@ -7,15 +7,12 @@ import com.mac.doc.dto.DocForm;
 import com.mac.doc.service.DocumentService;
 import com.mac.doc.service.ProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/api/doc")
 public class DocumentController {
 
     private final DocumentService documentService;
@@ -27,13 +24,8 @@ public class DocumentController {
         this.programService = programService;
     }
 
-    @GetMapping("/doc/write")
-    public String writeForm() {
-        return "/doc/write";
-    }
-
-    @PostMapping("/doc/save")
-    public String save(DocForm form) {
+    @PostMapping("/save")
+    public String save(@RequestBody DocForm form) {
         Program program = Program.builder()
                 .programCd(form.getProgramCd())
                 .build();
@@ -51,20 +43,14 @@ public class DocumentController {
         return "redirect:/doc/view/" + document.getDocId();
     }
 
-    @GetMapping("/doc/view/{docId}")
-    public String view(@PathVariable("docId") long docId, Model model) throws Exception {
-        Document document = documentService.findOne(docId)
+    @GetMapping("/view/{docId}")
+    public Document view(@PathVariable("docId") long docId) throws Exception {
+        return documentService.findOne(docId)
                 .orElseThrow(() -> new Exception("not found."));
-        model.addAttribute("document", document);
-
-        return "/doc/view";
     }
 
-    @GetMapping("/doc/list")
-    public String list(Model model) {
-        List<Program> programs = programService.findPrograms();
-        model.addAttribute("programs", programs);
-
-        return "/doc/list";
+    @GetMapping("/list")
+    public List<Program> list() {
+        return programService.findPrograms();
     }
 }

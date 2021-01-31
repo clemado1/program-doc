@@ -6,7 +6,7 @@ public enum DocStat {
     PUBLISHED("30"),
     RELEASE("40");
 
-    private String docStatCd;
+    private final String docStatCd;
 
     DocStat(String docStatCd) {
         this.docStatCd = docStatCd;

@@ -17,7 +17,7 @@ import java.io.IOException;
 public class JwtFilter extends GenericFilterBean {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
-    private TokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
 
     public JwtFilter(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
@@ -30,18 +30,22 @@ public class JwtFilter extends GenericFilterBean {
         String jwt = resolveToken(httpServletRequest);
         String requestURI = httpServletRequest.getRequestURI();
 
-        if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-            Authentication authentication = tokenProvider.getAuthentication(jwt);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            logger.debug("Security Context '{}', uri: {}", authentication.getName(), requestURI);
-        } else {
-            logger.debug("Not Valid JWT Token, uri: {}", requestURI);
+        if (StringUtils.hasText(jwt)) {
+            if (tokenProvider.validateToken(jwt)) {
+                Authentication authentication = tokenProvider.getAuthentication(jwt);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                logger.debug("Security Context '{}', uri: {}", authentication.getName(), requestURI);
+            } else {
+                logger.debug("Not Valid JWT Token, uri: {}", requestURI);
+            }
         }
+
+        chain.doFilter(request, response);
 
     }
 
     private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORITIES_HEADER);
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }

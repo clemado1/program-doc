@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List</title>
+</head>
+<script>
+    fetch("/api/doc/list",{
+        method: 'get',
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem("jwt"),
+        }
+    }).then(res => res.json())
+        .then(json => {
+            console.log(json);
+            let programs = document.getElementById("program-list");
+            json.forEach(function (data) {
+                let proLi = document.createElement("li");
+                proLi.innerText = `[${data.programCd}] ${data.programNm}`;
+                if (data.documents.length !== 0) {
+                    let docUl = document.createElement("ul");
+                    data.documents.forEach(function (doc) {
+                        let docLi = document.createElement("li");
+                        let docLink = document.createElement("a");
+                        docLink.innerText = doc.title;
+                        docLink.setAttribute("href", `/doc/view/${doc.docId}`);
+                        docLi.appendChild(docLink);
+                        docUl.appendChild(docLi);
+                    });
+                    proLi.appendChild(docUl);
+                }
+                programs.appendChild(proLi);
+            })
+        })
+</script>
+<body>
+<div class="container">
+    <ul id="program-list">
+    </ul>
+</div>
+</body>
+</html>

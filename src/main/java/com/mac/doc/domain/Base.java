@@ -14,10 +14,10 @@ import java.time.ZonedDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class Base extends Session implements Serializable {
+public class Base implements Serializable {
 
     @CreatedBy
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rgsn_user_id", referencedColumnName = "user_id")
     private User rgsnUser;
 
@@ -25,7 +25,7 @@ public class Base extends Session implements Serializable {
     private ZonedDateTime rgsnDttm;
 
     @LastModifiedBy
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "modi_user_id", referencedColumnName = "user_id")
     private User modiUser;
 

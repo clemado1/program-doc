@@ -1,5 +1,7 @@
 package com.mac.doc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.mac.doc.domain.type.DocStat;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -12,9 +14,10 @@ import java.util.Set;
 @Entity
 @Table(name = "document")
 @Getter
-@ToString(exclude = "label")
+@ToString(exclude = {"program", "label"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "docCache")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "docId")
 public class Document extends Base {
 
     @Id
@@ -33,7 +36,7 @@ public class Document extends Base {
 
     private Double version = 1.0;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "program_cd")
     private Program program;
 

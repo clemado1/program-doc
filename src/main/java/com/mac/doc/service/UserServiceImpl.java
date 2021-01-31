@@ -1,26 +1,23 @@
 package com.mac.doc.service;
 
-import com.mac.doc.domain.Session;
 import com.mac.doc.domain.User;
 import com.mac.doc.domain.type.Role;
 import com.mac.doc.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
-    @Resource
-    private Session session;
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -43,7 +40,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User getSessionUser() {
-        return User.builder().userId(session.getSessUserId()).userNm(session.getSessUserNm()).build();
+    public User getSessionUser() throws Exception {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) principal;
+
+        return userRepository.findById(userDetails.getUsername()).orElseThrow(() -> new Exception("No User Info."));
     }
 }

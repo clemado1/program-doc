@@ -21,7 +21,7 @@ public class Label extends Base {
     private String labelNm;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "label")
-    private Set<Document> document = new HashSet<>();
+    private final Set<Document> document = new HashSet<>();
 
     @Builder
     public Label(long labelId, String labelNm) {
