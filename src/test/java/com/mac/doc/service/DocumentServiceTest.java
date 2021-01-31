@@ -1,20 +1,25 @@
 package com.mac.doc.service;
 
-import com.mac.doc.domain.Document;
-import com.mac.doc.domain.Label;
-import com.mac.doc.domain.Program;
+import com.mac.doc.domain.*;
 import com.mac.doc.domain.type.DocStat;
 import com.mac.doc.repository.DocumentRepository;
 import com.mac.doc.repository.LabelRepository;
 import com.mac.doc.repository.ProgramRepository;
+import com.mac.doc.repository.ProgramRepositorySupport;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.mac.doc.domain.QDocument.document;
+import static com.mac.doc.domain.QProgram.program;
+import static com.mac.doc.domain.QProgramDocument.programDocument;
 
 @Transactional
 @SpringBootTest
@@ -38,6 +43,9 @@ class DocumentServiceTest {
     @Autowired
     ProgramRepository programRepository;
 
+    @Autowired
+    ProgramRepositorySupport programRepositorySupport;
+
     @Test
     void saveDocument() {
         Set<Label> labelSet = new HashSet<>();
@@ -47,11 +55,27 @@ class DocumentServiceTest {
         labelSet.add(label2);
 
         Program program = Program.builder().programCd("COM10").programNm("TEST").build();
-        Document doc = Document.builder().docStat(DocStat.TEMPSAVE).program(program).title("title1").contents("content1").label(labelSet).build();
 
-        Document newdoc = documentService.saveDocument(doc);
+        DocumentData documentData = DocumentData.builder().title("title1").contents("content1").label(labelSet).build();
+
+        Document doc = Document.builder().documentData(documentData).docStat(DocStat.TEMPSAVE).build();
+
+        ProgramDocument programDocument = ProgramDocument.builder()
+                .program(program)
+                .document(doc)
+                .build();
+
+        programService.saveProgramDocument(programDocument);
+
+        documentService.saveDocument(doc);
+        Document newdoc = documentService.findOne(doc.getDocId()).get();
 
         Assertions.assertThat(newdoc.getDocId()).isEqualTo(doc.getDocId());
+    }
+
+    @Test
+    public void querydsl() {
+        programRepositorySupport.findAllPrograms();
     }
 
     @Test

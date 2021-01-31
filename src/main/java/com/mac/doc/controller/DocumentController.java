@@ -1,7 +1,9 @@
 package com.mac.doc.controller;
 
 import com.mac.doc.domain.Document;
+import com.mac.doc.domain.DocumentData;
 import com.mac.doc.domain.Program;
+import com.mac.doc.domain.ProgramDocument;
 import com.mac.doc.domain.type.DocStat;
 import com.mac.doc.dto.DocForm;
 import com.mac.doc.service.DocumentService;
@@ -30,15 +32,25 @@ public class DocumentController {
                 .programCd(form.getProgramCd())
                 .build();
 
-        Document document = Document.builder()
-                .program(program)
-                .docStat(DocStat.TEMPSAVE)
+        DocumentData documentData = DocumentData.builder()
                 .title(form.getTitle())
                 .contents(form.getContents())
                 .version(form.getVersion())
                 .build();
 
+        Document document = Document.builder()
+                .documentData(documentData)
+                .docStat(DocStat.TEMPSAVE)
+                .build();
+
         documentService.saveDocument(document);
+
+        ProgramDocument programDocument = ProgramDocument.builder()
+                .program(program)
+                .document(document)
+                .build();
+
+        programService.saveProgramDocument(programDocument);
 
         return "redirect:/doc/view/" + document.getDocId();
     }

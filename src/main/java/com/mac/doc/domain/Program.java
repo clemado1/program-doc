@@ -27,7 +27,7 @@ public class Program extends Base {
     private User picUser;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "program")
-    private final Set<Document> documents = new HashSet<>();
+    private final Set<ProgramDocument> documents = new HashSet<>();
 
     @Builder
     public Program(String programCd, String programNm) {

@@ -1,6 +1,7 @@
 package com.mac.doc.service;
 
 import com.mac.doc.domain.Document;
+import com.mac.doc.repository.DocumentDataRepository;
 import com.mac.doc.repository.DocumentRepository;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +10,11 @@ import java.util.Optional;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
+    private final DocumentDataRepository documentDataRepository;
     private final DocumentRepository documentRepository;
 
-    public DocumentServiceImpl(DocumentRepository documentRepository) {
+    public DocumentServiceImpl(DocumentDataRepository documentDataRepository, DocumentRepository documentRepository) {
+        this.documentDataRepository = documentDataRepository;
         this.documentRepository = documentRepository;
     }
 

@@ -1,6 +1,8 @@
 package com.mac.doc;
 
 import com.mac.doc.domain.User;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -10,12 +12,17 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.EntityManager;
 import java.util.Collection;
 import java.util.Optional;
 
 @Configuration
 @EnableJpaAuditing
-class SpringSecurityAuditorAware implements AuditorAware<User> {
+public class DataConfig implements AuditorAware<User> {
+    @Bean
+    public JPAQueryFactory jpaQueryFactory(EntityManager em) {
+        return new JPAQueryFactory(em);
+    }
 
     @Override
     public Optional<User> getCurrentAuditor() {

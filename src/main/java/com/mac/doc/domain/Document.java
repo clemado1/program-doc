@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "document")
 @Getter
-@ToString(exclude = {"program", "label"})
+@ToString(exclude = {"program"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "docCache")
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "docId")
@@ -29,36 +29,19 @@ public class Document extends Base {
     @Enumerated(EnumType.STRING)
     private DocStat docStat;
 
-    @Column(nullable = false)
-    private String title;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "document")
+    private Set<ProgramDocument> program = new HashSet<>();
 
-    private String contents;
-
-    private Double version = 1.0;
-
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "program_cd")
-    private Program program;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "doc_label",
-            joinColumns = {@JoinColumn(name = "doc_id")},
-            inverseJoinColumns = {@JoinColumn(name = "label_id")}
-    )
-    private Set<Label> label = new HashSet<>();
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "doc_sn")
+    private DocumentData documentData;
 
     @Builder
-    public Document(Program program, DocStat docStat, String title, String contents, double version, Set<Label> label) {
-        Assert.notNull(program, "program must not be empty");
+    public Document(DocumentData documentData, DocStat docStat) {
         Assert.notNull(docStat, "docStat must not be null");
-        Assert.hasText(title, "title must not be null");
 
-        this.program = program;
+        this.documentData = documentData;
         this.docStat = docStat;
-        this.title = title;
-        this.contents = contents;
-        this.version = version;
-        this.label = label;
     }
 
 }

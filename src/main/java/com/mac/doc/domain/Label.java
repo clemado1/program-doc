@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "label")
 @Getter
-@ToString(exclude = "document")
+@ToString(exclude = "documentData")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "labelCache")
 public class Label extends Base {
@@ -21,7 +21,7 @@ public class Label extends Base {
     private String labelNm;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "label")
-    private final Set<Document> document = new HashSet<>();
+    private final Set<DocumentData> documentData = new HashSet<>();
 
     @Builder
     public Label(long labelId, String labelNm) {
