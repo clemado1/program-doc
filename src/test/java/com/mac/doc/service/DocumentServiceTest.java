@@ -5,21 +5,15 @@ import com.mac.doc.domain.type.DocStat;
 import com.mac.doc.repository.DocumentRepository;
 import com.mac.doc.repository.LabelRepository;
 import com.mac.doc.repository.ProgramRepository;
-import com.mac.doc.repository.ProgramRepositorySupport;
-import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.mac.doc.repository.ProgramRepositorySupportImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.HashSet;
 import java.util.Set;
-
-import static com.mac.doc.domain.QDocument.document;
-import static com.mac.doc.domain.QProgram.program;
-import static com.mac.doc.domain.QProgramDocument.programDocument;
 
 @Transactional
 @SpringBootTest
@@ -44,7 +38,7 @@ class DocumentServiceTest {
     ProgramRepository programRepository;
 
     @Autowired
-    ProgramRepositorySupport programRepositorySupport;
+    ProgramRepositorySupportImpl programRepositorySupportImpl;
 
     @Test
     void saveDocument() {
@@ -75,7 +69,7 @@ class DocumentServiceTest {
 
     @Test
     public void querydsl() {
-        programRepositorySupport.findAllPrograms();
+        programRepositorySupportImpl.findAllPrograms();
     }
 
     @Test

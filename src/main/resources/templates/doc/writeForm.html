@@ -3,12 +3,10 @@
 <head th:replace="fragments/doc_common :: docHead"><title></title></head>
 <body>
 <div th:replace="fragments/doc_common :: docBody"></div>
-<form method="post" th:action="@{/doc/save}">
-    <input id="docId" name="docId" type="hidden"/>
+    <input id="docId" name="docId" th:value="${docId}" type="hidden"/>
     <h1>writeform</h1>
     <input id="title" name="title" placeholder="title" type="text"/>
     version: <input id="version" name="version" step="0.01" type="number" value="1.00"/>
-    <input id="programCd" name="programCd" placeholder="programCd" type="text"/>
     <div id="editor"></div>
     <script>
         const Editor = toastui.Editor;
@@ -23,14 +21,26 @@
 
         editor.getHtml();
     </script>
-    <input id="contents" name="contents" type="hidden">
     <button id="form-submit" th:text="Save" type="submit"></button>
-</form>
 <script>
     const saveBtn = document.querySelector("#form-submit");
     saveBtn.addEventListener('click', function () {
-        let contents = document.querySelector("#contents");
-        contents.value = editor.getMarkdown(); //markdown 저장
+        fetch("/api/doc/save", {
+            method: 'post',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem("jwt"),
+            },
+            body : JSON.stringify({
+                docId : document.getElementById("docId").value,
+                title : document.getElementById("title").value,
+                version : document.getElementById("version").value,
+                contents : editor.getMarkdown(),
+            })
+        }).then(res => res.json())
+            .then(docId => {
+                location.href = `/doc/view/${docId}`;
+            });
     });
 </script>
 </body>

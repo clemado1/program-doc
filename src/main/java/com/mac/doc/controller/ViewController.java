@@ -5,6 +5,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.Optional;
+
 @Controller
 public class ViewController {
 
@@ -13,8 +15,10 @@ public class ViewController {
         return "/user/loginForm";
     }
 
-    @GetMapping("/doc/write")
-    public String writeForm() {
+    @GetMapping(value = {"/doc/write", "/doc/write/{docId}"})
+    public String writeForm(@PathVariable("docId") Optional<Long> docId, Model model) {
+        model.addAttribute("docId", docId);
+
         return "/doc/writeForm";
     }
 

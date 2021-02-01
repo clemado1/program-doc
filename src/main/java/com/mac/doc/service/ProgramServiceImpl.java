@@ -20,7 +20,7 @@ public class ProgramServiceImpl implements ProgramService {
 
     @Override
     public List<Program> findPrograms() {
-        return programRepository.findAll();
+        return programRepository.findAllPrograms();
     }
 
     @Override

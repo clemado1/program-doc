@@ -3,7 +3,6 @@ package com.mac.doc.controller;
 import com.mac.doc.domain.Document;
 import com.mac.doc.domain.DocumentData;
 import com.mac.doc.domain.Program;
-import com.mac.doc.domain.ProgramDocument;
 import com.mac.doc.domain.type.DocStat;
 import com.mac.doc.dto.DocForm;
 import com.mac.doc.service.DocumentService;
@@ -27,11 +26,7 @@ public class DocumentController {
     }
 
     @PostMapping("/save")
-    public String save(@RequestBody DocForm form) {
-        Program program = Program.builder()
-                .programCd(form.getProgramCd())
-                .build();
-
+    public Long save(@RequestBody DocForm form) {
         DocumentData documentData = DocumentData.builder()
                 .title(form.getTitle())
                 .contents(form.getContents())
@@ -45,14 +40,7 @@ public class DocumentController {
 
         documentService.saveDocument(document);
 
-        ProgramDocument programDocument = ProgramDocument.builder()
-                .program(program)
-                .document(document)
-                .build();
-
-        programService.saveProgramDocument(programDocument);
-
-        return "redirect:/doc/view/" + document.getDocId();
+        return document.getDocId();
     }
 
     @GetMapping("/view/{docId}")

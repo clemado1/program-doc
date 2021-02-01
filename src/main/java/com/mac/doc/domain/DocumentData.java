@@ -1,6 +1,7 @@
 package com.mac.doc.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import org.springframework.util.Assert;
@@ -12,7 +13,7 @@ import java.util.Set;
 @Entity
 @Table(name = "document_data")
 @Getter
-@ToString(exclude = "label")
+@ToString(exclude = {"document", "label"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "docSn")
 public class DocumentData extends Base {
@@ -21,6 +22,11 @@ public class DocumentData extends Base {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "doc_sn")
     private Long docSn;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doc_id")
+    @JsonIgnore
+    private Document document;
 
     @Column(nullable = false)
     private String title;
@@ -31,7 +37,7 @@ public class DocumentData extends Base {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "doc_label",
-            joinColumns = {@JoinColumn(name = "doc_id")},
+            joinColumns = {@JoinColumn(name = "doc_sn")},
             inverseJoinColumns = {@JoinColumn(name = "label_id")}
     )
     private Set<Label> label = new HashSet<>();

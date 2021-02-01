@@ -20,7 +20,10 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public Document saveDocument(Document doc) {
-        return documentRepository.save(doc);
+        documentRepository.save(doc);
+        documentDataRepository.updateDocDataDocId(doc.getDocumentData(), doc.getDocId());
+
+        return doc;
     }
 
     @Override
