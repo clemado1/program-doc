@@ -5,6 +5,9 @@
 <div th:replace="fragments/doc_common :: docBody"></div>
     <input th:id="docId" th:name="docId" th:value="${docId}" type="hidden">
     <h1 th:id="title" th:name="title"></h1>
+    <div id="toc">
+
+    </div>
     <div id="viewer">
         <strong>Loading...</strong>
     </div>
@@ -20,15 +23,69 @@
         }).then(res => res.json())
             .then(json => {
                 console.log(json);
-                document.getElementById("title").innerText = json.title;
+                document.getElementById("title").innerText = json.documentData.title;
 
                 const Editor = toastui.Editor;
+                const codeSyntaxHighlight = Editor.plugin.codeSyntaxHighlight;
                 const viewer = Editor.factory({
                     el: document.getElementById('viewer'),
                     viewer: true,
-                    initialValue: json.contents
+                    initialValue: json.documentData.contents,
+                    plugins: [codeSyntaxHighlight],
+                    customHTMLRenderer: {
+                        heading(node, context) {
+                            const tagName = `h${node.level}`;
+                            let id = node.firstChild && node.firstChild.literal
+                                ? node.firstChild.literal
+                                : ""
+
+                            id = id.replace(/[^\w\s(가-힣)]/gi, " ")
+                                .trim()
+                                .toLocaleLowerCase()
+                                .replace(/ +/g, " ")
+                                .split(" ").join("-");
+
+                            if (context.entering) {
+                                return {
+                                    type: "openTag",
+                                    tagName,
+                                    attributes: {
+                                        id: id
+                                    }
+                                };
+                            }
+
+                            return { type: "closeTag", tagName,
+                                attributes: {
+                                    id: id
+                                }
+                            };
+                        },
+                    }
                 });
+
+                generateLinkMarkUp();
             });
+        function generateLinkMarkUp() {
+            const headings = [...document.getElementById("viewer").querySelectorAll("h1,h2,h3,h4,h5")];
+            const parsedHeadings = headings.map(function (heading) {
+                return {
+                    title: heading.innerText,
+                    depth: heading.nodeName.replace(/\D/g,''),
+                    id: heading.getAttribute('id')
+                }
+            });
+
+            const htmlMarkup = parsedHeadings.map(function (h) {
+                return `
+                <li class="${h.depth > 1 ? 'pl-4' : ''}">
+                    <a href="#${h.id}">${h.title}</a>
+                </li>
+                `
+            });
+
+            document.getElementById("toc").innerHTML = `<ul>${htmlMarkup.join('')}</ul>`;
+        }
     </script>
 </body>
 </html>
