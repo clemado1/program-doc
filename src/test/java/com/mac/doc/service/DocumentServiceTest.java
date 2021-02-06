@@ -50,16 +50,9 @@ class DocumentServiceTest {
 
         Program program = Program.builder().programCd("COM10").programNm("TEST").build();
 
-        DocumentData documentData = DocumentData.builder().title("title1").contents("content1").label(labelSet).build();
+        DocumentData documentData = DocumentData.builder().docStat(DocStat.TEMPSAVE).contents("content1").label(labelSet).build();
 
-        Document doc = Document.builder().documentData(documentData).docStat(DocStat.TEMPSAVE).build();
-
-        ProgramDocument programDocument = ProgramDocument.builder()
-                .program(program)
-                .document(doc)
-                .build();
-
-        programService.saveProgramDocument(programDocument);
+        Document doc = Document.builder().documentData(documentData).title("title1").build();
 
         documentService.saveDocument(doc);
         Document newdoc = documentService.findOne(doc.getDocId()).get();

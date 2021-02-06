@@ -1,6 +1,8 @@
 package com.mac.doc.service;
 
 import com.mac.doc.domain.Document;
+import com.mac.doc.domain.DocumentData;
+import com.mac.doc.domain.type.DocStat;
 import com.mac.doc.repository.DocumentDataRepository;
 import com.mac.doc.repository.DocumentRepository;
 import org.springframework.stereotype.Service;
@@ -21,9 +23,23 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public Document saveDocument(Document doc) {
         documentRepository.save(doc);
-        documentDataRepository.updateDocDataDocId(doc.getDocumentData(), doc.getDocId());
 
         return doc;
+    }
+
+    @Override
+    public DocumentData saveDocumentData(DocumentData docData) {
+        documentDataRepository.save(docData);
+        if (docData.getDocStat() == DocStat.PUBLISHED) {
+
+        }
+
+        return docData;
+    }
+
+    @Override
+    public Document publishDocument(DocumentData docData) {
+        return null;
     }
 
     @Override

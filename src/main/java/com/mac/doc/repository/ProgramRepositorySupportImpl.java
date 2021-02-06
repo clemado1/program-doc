@@ -1,7 +1,6 @@
 package com.mac.doc.repository;
 
 import static com.mac.doc.domain.QProgram.program;
-import static com.mac.doc.domain.QProgramDocument.programDocument;
 import static com.mac.doc.domain.QDocument.document;
 
 import com.mac.doc.domain.Program;
@@ -21,9 +20,7 @@ public class ProgramRepositorySupportImpl implements ProgramRepositorySupport {
     public List<Program> findAllPrograms() {
         return queryFactory
                 .selectFrom(program)
-                .leftJoin(program.documents, programDocument)
-                .fetchJoin()
-                .leftJoin(programDocument.document, document)
+                .leftJoin(program.document, document)
                 .fetchJoin()
                 .distinct()
                 .fetch();

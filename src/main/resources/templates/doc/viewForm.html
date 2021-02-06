@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/doc_common :: docHead"><title></title></head>
+<script>
+    const newBtn = document.querySelector("#write-form");
+    newBtn.addEventListener('click', function () {
+        const docId = document.getElementById("docId");
+        location.href = `/doc/write/${docId}`;
+    });
+</script>
 <body>
 <div th:replace="fragments/doc_common :: docBody"></div>
     <input th:id="docId" th:name="docId" th:value="${docId}" type="hidden">
     <h1 th:id="title" th:name="title"></h1>
-    <div id="toc">
-
-    </div>
+    <div id="toc"></div>
+    <button id="write-form" th:text="New"></button>
     <div id="viewer">
         <strong>Loading...</strong>
     </div>

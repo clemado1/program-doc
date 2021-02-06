@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class DocForm {
     private String docId;
+    private String docSn;
     private String title;
     private String contents;
     private Double version;

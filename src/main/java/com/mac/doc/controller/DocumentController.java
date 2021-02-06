@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/doc")
@@ -25,26 +26,60 @@ public class DocumentController {
         this.programService = programService;
     }
 
-    @PostMapping("/save")
-    public Long save(@RequestBody DocForm form) {
-        DocumentData documentData = DocumentData.builder()
-                .title(form.getTitle())
-                .contents(form.getContents())
-                .version(form.getVersion())
+    @PostMapping("/create")
+    public Long create(@RequestBody DocForm form) {
+        Program program = Program.builder()
+                .programCd(form.getProgramCd())
                 .build();
 
         Document document = Document.builder()
-                .documentData(documentData)
-                .docStat(DocStat.TEMPSAVE)
+                .title(form.getTitle())
+                .program(program)
                 .build();
 
         documentService.saveDocument(document);
 
+        DocumentData documentData = DocumentData.builder()
+                .document(document)
+                .docStat(DocStat.TEMPSAVE)
+                .contents(form.getContents())
+                .version(form.getVersion())
+                .build();
+
+        documentService.saveDocumentData(documentData);
+
         return document.getDocId();
     }
 
-    @GetMapping("/view/{docId}")
-    public Document view(@PathVariable("docId") long docId) throws Exception {
+    @PostMapping("/save")
+    public DocumentData save(@RequestBody DocForm form) {
+        DocumentData documentData = DocumentData.builder()
+                .docSn(Long.parseLong(form.getDocSn()))
+                .document(Document.builder().docId(Long.parseLong(form.getDocId())).build())
+                .docStat(DocStat.TEMPSAVE)
+                .contents(form.getContents())
+                .version(form.getVersion())
+                .build();
+
+        return documentService.saveDocumentData(documentData);
+    }
+
+    @PostMapping("/publish")
+    public Long publish(@RequestBody DocForm form) {
+        DocumentData documentData = DocumentData.builder()
+                .docSn(Long.parseLong(form.getDocSn()))
+                .document(Document.builder().docId(Long.parseLong(form.getDocId())).build())
+                .docStat(DocStat.PUBLISHED)
+                .build();
+
+        Document document = documentService.publishDocument(documentData);
+
+        return document.getDocId();
+    }
+
+    @GetMapping(value = {"/view/{docId}", "/view/{docId}/{docSn}"})
+    public Document view(@PathVariable("docId") long docId
+            , @PathVariable("docSn") Optional<Long> docSn) throws Exception {
         return documentService.findOne(docId)
                 .orElseThrow(() -> new Exception("not found."));
     }

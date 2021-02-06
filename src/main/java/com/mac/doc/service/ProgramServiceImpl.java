@@ -1,8 +1,6 @@
 package com.mac.doc.service;
 
 import com.mac.doc.domain.Program;
-import com.mac.doc.domain.ProgramDocument;
-import com.mac.doc.repository.ProgramDocumentRepository;
 import com.mac.doc.repository.ProgramRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +9,9 @@ import java.util.List;
 @Service
 public class ProgramServiceImpl implements ProgramService {
     private final ProgramRepository programRepository;
-    private final ProgramDocumentRepository programDocumentRepository;
 
-    public ProgramServiceImpl(ProgramRepository programRepository, ProgramDocumentRepository programDocumentRepository) {
+    public ProgramServiceImpl(ProgramRepository programRepository) {
         this.programRepository = programRepository;
-        this.programDocumentRepository = programDocumentRepository;
     }
 
     @Override
@@ -24,7 +20,8 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Override
-    public void saveProgramDocument(ProgramDocument programDocument) {
-        programDocumentRepository.save(programDocument);
+    public void saveProgram(Program program) {
+        programRepository.save(program);
     }
+
 }

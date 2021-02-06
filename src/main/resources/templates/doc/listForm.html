@@ -5,7 +5,7 @@
     <title>List</title>
 </head>
 <script>
-    fetch("/api/doc/list",{
+    fetch("/api/prg/list",{
         method: 'get',
         headers: {
             'content-type': 'application/json',
@@ -36,8 +36,34 @@
 </script>
 <body>
 <div class="container">
+    <div id="new-program">
+        <input type="text" id="programCd" name="programCd">
+        <input type="text" id="programNm" name="programNm">
+        <input type="text" id="programType" name="programType">
+        <button id="form-submit" th:text="Create" type="submit"></button>
+    </div>
     <ul id="program-list">
     </ul>
 </div>
+<script>
+    const saveBtn = document.querySelector("#form-submit");
+    saveBtn.addEventListener('click', function () {
+        fetch("/api/prg/create", {
+            method: 'post',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem("jwt"),
+            },
+            body : JSON.stringify({
+                programCd : document.getElementById("programCd").value,
+                programNm : document.getElementById("programNm").value,
+                programType : document.getElementById("programType").value,
+            })
+        }).then(res => res.json())
+            .then(programCd => {
+                location.href = `/doc/write?programCd=${programCd}`;
+            });
+    });
+</script>
 </body>
 </html>

@@ -3,6 +3,7 @@ package com.mac.doc.domain;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.mac.doc.domain.type.DocStat;
 import lombok.*;
 import org.springframework.util.Assert;
 
@@ -29,7 +30,8 @@ public class DocumentData extends Base {
     private Document document;
 
     @Column(nullable = false)
-    private String title;
+    @Enumerated(EnumType.STRING)
+    private DocStat docStat;
 
     private String contents;
 
@@ -43,11 +45,14 @@ public class DocumentData extends Base {
     private Set<Label> label = new HashSet<>();
 
     @Builder
-    public DocumentData(String title, String contents, Double version, Set<Label> label) {
-        Assert.notNull(title, "title must not be null");
+    public DocumentData(Long docSn, Document document, DocStat docStat, String contents, Double version, Set<Label> label) {
+        Assert.notNull(docStat, "docStat must not be null");
 
-        this.title = title;
+        this.docSn = docSn;
+        this.document = document;
+        this.docStat = docStat;
         this.contents = contents;
         this.version = version;
+
     }
 }
