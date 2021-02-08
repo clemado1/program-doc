@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/doc_common :: docHead"><title></title></head>
-<script>
-    const newBtn = document.querySelector("#write-form");
-    newBtn.addEventListener('click', function () {
-        const docId = document.getElementById("docId");
-        location.href = `/doc/write/${docId}`;
-    });
-</script>
 <body>
 <div th:replace="fragments/doc_common :: docBody"></div>
     <input th:id="docId" th:name="docId" th:value="${docId}" type="hidden">
@@ -20,6 +13,12 @@
     <script>
         let docId = document.getElementById("docId").value;
 
+        const newBtn = document.querySelector("#write-form");
+        newBtn.addEventListener('click', function () {
+            const docId = document.getElementById("docId");
+            location.href = `/doc/write/${docId}`;
+        });
+
         fetch(`/api/doc/view/${docId}`,{
             method: 'get',
             headers: {
@@ -29,7 +28,7 @@
         }).then(res => res.json())
             .then(json => {
                 console.log(json);
-                document.getElementById("title").innerText = json.documentData.title;
+                document.getElementById("title").innerText = json.title;
 
                 const Editor = toastui.Editor;
                 const codeSyntaxHighlight = Editor.plugin.codeSyntaxHighlight;

@@ -2,6 +2,7 @@ package com.mac.doc.service;
 
 import com.mac.doc.domain.*;
 import com.mac.doc.domain.type.DocStat;
+import com.mac.doc.domain.type.ProgramType;
 import com.mac.doc.repository.DocumentRepository;
 import com.mac.doc.repository.LabelRepository;
 import com.mac.doc.repository.ProgramRepository;
@@ -71,6 +72,7 @@ class DocumentServiceTest {
 
     @Test
     void findOne() {
+        ProgramType pt = ProgramType.valueOf("USER");
     }
 
     @Test

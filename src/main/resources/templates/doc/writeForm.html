@@ -27,7 +27,11 @@
 <script>
     const saveBtn = document.querySelector("#form-submit");
     saveBtn.addEventListener('click', function () {
-        fetch("/api/doc/save", {
+        const docId = document.getElementById("docId").value;
+        const saveUrl = isNaN(docId) ? "/api/doc/create" : "/api/doc/save";
+        console.log(saveUrl);
+
+        fetch(saveUrl, {
             method: 'post',
             headers: {
                 'content-type': 'application/json',
@@ -41,7 +45,10 @@
                 version : document.getElementById("version").value,
                 contents : editor.getMarkdown(),
             })
-        }).then(res => res.json())
+        }).then(res => {
+            console.log(res);
+            return res.json();
+        })
             .then(docId => {
                 location.href = `/doc/view/${docId}`;
             });

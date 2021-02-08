@@ -20,11 +20,12 @@ public class ViewController {
     public String writeForm(
             @PathVariable("docId") Optional<Long> docId,
             @PathVariable("docSn") Optional<Long> docSn,
-            @RequestParam("programCd") String programCd,
+            @RequestParam("programCd") Optional<String> programCd,
             Model model) {
-        model.addAttribute("docId", docId);
-        model.addAttribute("docSn", docSn);
-        model.addAttribute("programCd", programCd);
+
+        docId.ifPresent(d -> model.addAttribute("docId", d));
+        docSn.ifPresent(d -> model.addAttribute("docSn", d));
+        programCd.ifPresent(d -> model.addAttribute("programCd", d));
 
         return "/doc/writeForm";
     }
@@ -35,7 +36,7 @@ public class ViewController {
             @PathVariable("docSn") Optional<Long> docSn,
             Model model) {
         model.addAttribute("docId", docId);
-        model.addAttribute("docSn", docSn);
+        docSn.ifPresent(d -> model.addAttribute("docSn", d));
 
         return "/doc/viewForm";
     }

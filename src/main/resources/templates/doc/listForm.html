@@ -60,8 +60,9 @@
                 programType : document.getElementById("programType").value,
             })
         }).then(res => res.json())
-            .then(programCd => {
-                location.href = `/doc/write?programCd=${programCd}`;
+            .then(program => {
+                console.log(program);
+                location.href = `/doc/write?programCd=${program.programCd}`;
             });
     });
 </script>

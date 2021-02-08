@@ -36,8 +36,6 @@ public class Program extends Base {
     @Builder
     public Program(String programCd, String programNm, ProgramType programType) {
         Assert.notNull(programCd, "programCd must not be null");
-        Assert.notNull(programNm, "programNm must not be null");
-        Assert.notNull(programType, "programType must not be null");
 
         this.programCd = programCd;
         this.programNm = programNm;

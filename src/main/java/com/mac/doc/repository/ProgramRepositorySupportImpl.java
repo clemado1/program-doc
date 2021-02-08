@@ -20,7 +20,7 @@ public class ProgramRepositorySupportImpl implements ProgramRepositorySupport {
     public List<Program> findAllPrograms() {
         return queryFactory
                 .selectFrom(program)
-                .leftJoin(program.document, document)
+                .leftJoin(program.documents, document)
                 .fetchJoin()
                 .distinct()
                 .fetch();

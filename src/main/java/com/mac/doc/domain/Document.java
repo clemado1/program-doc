@@ -32,6 +32,10 @@ public class Document extends Base {
     @JoinColumn(name = "doc_sn")
     private DocumentData documentData;
 
+    public void setDocumentData(DocumentData documentData) {
+        this.documentData = documentData;
+    }
+
     @Builder
     public Document(Long docId, Program program, DocumentData documentData, String title) {
         this.program = program;

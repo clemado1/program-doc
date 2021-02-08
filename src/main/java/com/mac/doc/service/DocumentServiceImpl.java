@@ -60,6 +60,10 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public Optional<Document> findOne(Long docId) {
+        Document document = documentRepository.findById(docId).orElseThrow();
+        if (document.getDocumentData() == null) {
+            document.setDocumentData(documentDataRepository.findFirstByDocumentOrderByDocSn(document));
+        }
         return documentRepository.findById(docId);
     }
 

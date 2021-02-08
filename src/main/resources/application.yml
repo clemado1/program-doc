@@ -5,7 +5,7 @@ spring:
     username: sa
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
 
 logging:
@@ -13,7 +13,7 @@ logging:
     com.mac.doc: DEBUG
 
 jwt:
-  header: Authrization
+  header: Authorization
   secret: Y2xlbWFkbzEtbWFjLWRvYy1zZWNyZXQta2V5LWp3dC10b2tlbi0xMjM0NTY3ODkwLWhlbGxvLXdvcmxkLXNlY3JldC1rZXkK
   token-validity-in-seconds: 86400
 

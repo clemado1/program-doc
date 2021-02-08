@@ -17,7 +17,7 @@ public class ProgramController {
     }
 
     @PostMapping("/create")
-    public String create(@RequestBody PrgForm prgForm) {
+    public Program create(@RequestBody PrgForm prgForm) {
         Program program = Program.builder()
                 .programCd(prgForm.getProgramCd())
                 .programNm(prgForm.getProgramNm())
@@ -26,7 +26,7 @@ public class ProgramController {
 
         programService.saveProgram(program);
 
-        return program.getProgramCd();
+        return program;
     }
 
     @GetMapping("/list")
