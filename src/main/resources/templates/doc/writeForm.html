@@ -23,6 +23,10 @@
 
         editor.getHtml();
     </script>
+    <select id="docStat" name="docStat">
+        <option value="tempsave">TempSave</option>
+        <option value="published">Publish</option>
+    </select>
     <button id="form-submit" th:text="Save" type="submit"></button>
 <script>
     const saveBtn = document.querySelector("#form-submit");
@@ -42,6 +46,7 @@
                 docSn : document.getElementById("docSn").value,
                 programCd : document.getElementById("programCd").value,
                 title : document.getElementById("title").value,
+                docStat : document.getElementById("docStat").value,
                 version : document.getElementById("version").value,
                 contents : editor.getMarkdown(),
             })

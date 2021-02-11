@@ -10,4 +10,8 @@ public interface ProgramService {
 
     void saveProgram(Program program);
 
+    boolean validateWriter(String programCd);
+
+    boolean checkInProgram(String programCd);
+
 }

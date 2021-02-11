@@ -12,6 +12,6 @@ public class PrgForm {
     private ProgramType programType;
 
     public void setProgramType(String programType) {
-        this.programType = ProgramType.valueOf(programType);
+        this.programType = ProgramType.valueOf(programType.toUpperCase());
     }
 }

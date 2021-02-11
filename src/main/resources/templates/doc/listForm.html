@@ -15,23 +15,30 @@
         .then(json => {
             console.log(json);
             let programs = document.getElementById("program-list");
-            json.forEach(function (data) {
-                let proLi = document.createElement("li");
-                proLi.innerText = `[${data.programCd}] ${data.programNm}`;
+
+            const htmlMarkup = json.map(function (data) {
+                let docUi = "";
                 if (data.documents.length !== 0) {
-                    let docUl = document.createElement("ul");
-                    data.documents.forEach(function (doc) {
-                        let docLi = document.createElement("li");
-                        let docLink = document.createElement("a");
-                        docLink.innerText = doc.title;
-                        docLink.setAttribute("href", `/doc/view/${doc.docId}`);
-                        docLi.appendChild(docLink);
-                        docUl.appendChild(docLi);
+                    let docLi = data.documents.map(function (doc) {
+                        return `
+                    <li>
+                        <a href="/doc/view/${doc.docId}">${doc.title}</a>
+                    </li>
+                    `
                     });
-                    proLi.appendChild(docUl);
+
+                    docUi = `<ul>${docLi}</ul>`;
                 }
-                programs.appendChild(proLi);
-            })
+
+                return `
+                    <li>
+                        <p>[${data.programCd}] ${data.programNm}</p>
+                        ${docUi}
+                    </li>
+                    `
+            });
+
+            programs.innerHTML = htmlMarkup;
         })
 </script>
 <body>

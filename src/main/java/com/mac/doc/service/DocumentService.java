@@ -11,11 +11,9 @@ public interface DocumentService {
 
     DocumentData saveDocumentData(DocumentData docData);
 
-    Document publishDocument(DocumentData docData);
+    boolean publishDocument(DocumentData docData);
 
-    boolean validateWriter(String programCd);
-
-    boolean checkInProgram(String programCd);
+    boolean validateWriter(Long docId);
 
     Document updateDocument(Document doc);
 

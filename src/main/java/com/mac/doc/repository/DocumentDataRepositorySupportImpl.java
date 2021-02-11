@@ -15,10 +15,10 @@ public class DocumentDataRepositorySupportImpl implements DocumentDataRepository
 
     @Override
     @Transactional
-    public Long updateDocDataDocId(DocumentData targetData, Long docId) {
+    public Long updateDocDataDocStat(DocumentData targetData) {
         return queryFactory.update(documentData)
                 .where(documentData.docSn.eq(targetData.getDocSn()))
-                .set(documentData.document.docId, docId)
+                .set(documentData.docStat, targetData.getDocStat())
                 .execute();
     }
 }

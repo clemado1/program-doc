@@ -4,19 +4,38 @@
 <body>
 <div th:replace="fragments/doc_common :: docBody"></div>
     <input th:id="docId" th:name="docId" th:value="${docId}" type="hidden">
+    <input th:id="docSn" th:name="docSn" th:value="${docSn}" type="hidden">
     <h1 th:id="title" th:name="title"></h1>
     <div id="toc"></div>
-    <button id="write-form" th:text="New"></button>
+    <button id="write-doc" th:text="New"></button>
     <div id="viewer">
         <strong>Loading...</strong>
     </div>
+    <button id="publish-doc" th:text="Publish"></button>
     <script>
         let docId = document.getElementById("docId").value;
 
-        const newBtn = document.querySelector("#write-form");
+        const newBtn = document.getElementById("write-doc");
         newBtn.addEventListener('click', function () {
-            const docId = document.getElementById("docId");
             location.href = `/doc/write/${docId}`;
+        });
+
+        const pubBtn = document.getElementById("publish-doc");
+        pubBtn.addEventListener('click', function () {
+            fetch("/api/doc/publish", {
+                method: 'post',
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem("jwt"),
+                },
+                body : JSON.stringify({
+                    docId : docId,
+                    docSn : document.getElementById("docSn").value,
+                })
+            }).then(res => res.json())
+                .then(docId => {
+
+                });
         });
 
         fetch(`/api/doc/view/${docId}`,{
@@ -29,6 +48,7 @@
             .then(json => {
                 console.log(json);
                 document.getElementById("title").innerText = json.title;
+                document.getElementById("docSn").value = json.documentData.docSn;
 
                 const Editor = toastui.Editor;
                 const codeSyntaxHighlight = Editor.plugin.codeSyntaxHighlight;

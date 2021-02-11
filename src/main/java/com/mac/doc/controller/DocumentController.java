@@ -41,7 +41,7 @@ public class DocumentController {
 
         DocumentData documentData = DocumentData.builder()
                 .document(document)
-                .docStat(DocStat.TEMPSAVE)
+                .docStat(form.getDocStat())
                 .contents(form.getContents())
                 .version(form.getVersion())
                 .build();
@@ -56,7 +56,7 @@ public class DocumentController {
         DocumentData documentData = DocumentData.builder()
                 .docSn(Long.parseLong(form.getDocSn()))
                 .document(Document.builder().docId(Long.parseLong(form.getDocId())).build())
-                .docStat(DocStat.TEMPSAVE)
+                .docStat(form.getDocStat())
                 .contents(form.getContents())
                 .version(form.getVersion())
                 .build();
@@ -72,9 +72,9 @@ public class DocumentController {
                 .docStat(DocStat.PUBLISHED)
                 .build();
 
-        Document document = documentService.publishDocument(documentData);
+        documentService.publishDocument(documentData);
 
-        return document.getDocId();
+        return documentData.getDocument().getDocId();
     }
 
     @GetMapping(value = {"/view/{docId}", "/view/{docId}/{docSn}"})

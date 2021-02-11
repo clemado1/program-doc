@@ -5,6 +5,8 @@ import com.mac.doc.domain.DocumentData;
 import com.mac.doc.domain.type.DocStat;
 import com.mac.doc.repository.DocumentDataRepository;
 import com.mac.doc.repository.DocumentRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,26 +33,29 @@ public class DocumentServiceImpl implements DocumentService {
     public DocumentData saveDocumentData(DocumentData docData) {
         documentDataRepository.save(docData);
         if (docData.getDocStat() == DocStat.PUBLISHED) {
-
+            documentRepository.updatePublishedDocSn(docData.getDocument().getDocId(), docData.getDocSn());
         }
 
         return docData;
     }
 
     @Override
-    public Document publishDocument(DocumentData docData) {
-        return null;
+    public boolean publishDocument(DocumentData docData) {
+        Long updateCnt = 1L;
+        updateCnt *= documentDataRepository.updateDocDataDocStat(docData);
+        updateCnt *= documentRepository.updatePublishedDocSn(docData.getDocument().getDocId(), docData.getDocSn());
+
+        return updateCnt > 0;
     }
 
     @Override
-    public boolean validateWriter(String programCd) {
-        // TODO: 체크인 유저 검사
-        return true;
-    }
+    public boolean validateWriter(Long docId) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) principal;
 
-    @Override
-    public boolean checkInProgram(String programCd) {
-        return false;
+        return documentRepository.findById(docId)
+                .map(document -> document.getProgram().getPicUser().getUserId().equals(userDetails.getUsername()))
+                .orElse(false);
     }
 
     @Override
@@ -62,7 +67,7 @@ public class DocumentServiceImpl implements DocumentService {
     public Optional<Document> findOne(Long docId) {
         Document document = documentRepository.findById(docId).orElseThrow();
         if (document.getDocumentData() == null) {
-            document.setDocumentData(documentDataRepository.findFirstByDocumentOrderByDocSn(document));
+            documentDataRepository.findFirstByDocumentOrderByDocSn(document).ifPresent(document::setDocumentData);
         }
         return documentRepository.findById(docId);
     }
