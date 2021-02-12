@@ -21,7 +21,28 @@
             plugins: [codeSyntaxHighlight]
         });
 
-        editor.getHtml();
+        let docId = document.getElementById("docId").value;
+        if (!isNaN(docId)) {
+
+            let url = document.getElementById("docSn").value
+                ? `/api/doc/${docId}/${document.getElementById("docSn").value}`
+                : `/api/doc/${docId}`;
+
+            fetch(url, {
+                method: 'get',
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem("jwt"),
+                }
+            }).then(res => res.json())
+                .then(doc => {
+                    document.getElementById("title").value = doc.title;
+                    if (doc.documentData !== null) {
+                        document.getElementById("version").value = doc.documentData.version;
+                        editor.setMarkdown(doc.documentData.contents, false);
+                    }
+                });
+        }
     </script>
     <select id="docStat" name="docStat">
         <option value="tempsave">TempSave</option>
@@ -55,7 +76,7 @@
             return res.json();
         })
             .then(docId => {
-                location.href = `/doc/view/${docId}`;
+                location.href = `/doc/${docId}`;
             });
     });
 </script>

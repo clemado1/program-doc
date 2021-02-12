@@ -17,7 +17,9 @@ public interface DocumentService {
 
     Document updateDocument(Document doc);
 
-    Optional<Document> findOne(Long docId);
+    Optional<Document> findDocument(Long docId, Optional<Long> docSn);
+
+    Optional<DocumentData> findDocumentData(Long docSn);
 
     List<Document> findDocuments();
 }

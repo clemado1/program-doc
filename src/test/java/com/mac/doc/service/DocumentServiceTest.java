@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Transactional
@@ -56,7 +57,7 @@ class DocumentServiceTest {
         Document doc = Document.builder().documentData(documentData).title("title1").build();
 
         documentService.saveDocument(doc);
-        Document newdoc = documentService.findOne(doc.getDocId()).get();
+        Document newdoc = documentService.findDocument(doc.getDocId(), Optional.empty()).get();
 
         Assertions.assertThat(newdoc.getDocId()).isEqualTo(doc.getDocId());
     }

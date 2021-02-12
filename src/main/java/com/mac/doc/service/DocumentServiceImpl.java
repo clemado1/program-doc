@@ -8,6 +8,7 @@ import com.mac.doc.repository.DocumentRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    @Transactional
     public boolean publishDocument(DocumentData docData) {
         Long updateCnt = 1L;
         updateCnt *= documentDataRepository.updateDocDataDocStat(docData);
@@ -64,12 +66,15 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Optional<Document> findOne(Long docId) {
-        Document document = documentRepository.findById(docId).orElseThrow();
-        if (document.getDocumentData() == null) {
-            documentDataRepository.findFirstByDocumentOrderByDocSn(document).ifPresent(document::setDocumentData);
-        }
-        return documentRepository.findById(docId);
+    public Optional<Document> findDocument(Long docId, Optional<Long> docSn) {
+        return docSn
+                .map(sn -> documentRepository.findDocumentWithData(docId, sn))
+                .orElse(documentRepository.findById(docId));
+    }
+
+    @Override
+    public Optional<DocumentData> findDocumentData(Long docSn) {
+        return documentDataRepository.findById(docSn);
     }
 
     @Override

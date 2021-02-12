@@ -30,7 +30,7 @@ public class ViewController {
         return "/doc/writeForm";
     }
 
-    @GetMapping(value = {"/doc/view/{docId}", "/doc/view/{docId}/{docSn}"})
+    @GetMapping(value = {"/doc/{docId}", "/doc/{docId}/{docSn}"})
     public String view(
             @PathVariable("docId") long docId,
             @PathVariable("docSn") Optional<Long> docSn,

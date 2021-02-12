@@ -2,7 +2,6 @@ package com.mac.doc.repository;
 
 import com.mac.doc.domain.DocumentData;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.transaction.annotation.Transactional;
 
 import static com.mac.doc.domain.QDocumentData.documentData;
 
@@ -14,7 +13,6 @@ public class DocumentDataRepositorySupportImpl implements DocumentDataRepository
     }
 
     @Override
-    @Transactional
     public Long updateDocDataDocStat(DocumentData targetData) {
         return queryFactory.update(documentData)
                 .where(documentData.docSn.eq(targetData.getDocSn()))

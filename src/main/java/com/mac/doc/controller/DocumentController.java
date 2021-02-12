@@ -66,9 +66,13 @@ public class DocumentController {
 
     @PostMapping("/publish")
     public Long publish(@RequestBody DocForm form) {
+        Document document = Document.builder()
+                .docId(Long.parseLong(form.getDocId()))
+                .build();
+
         DocumentData documentData = DocumentData.builder()
                 .docSn(Long.parseLong(form.getDocSn()))
-                .document(Document.builder().docId(Long.parseLong(form.getDocId())).build())
+                .document(document)
                 .docStat(DocStat.PUBLISHED)
                 .build();
 
@@ -77,11 +81,10 @@ public class DocumentController {
         return documentData.getDocument().getDocId();
     }
 
-    @GetMapping(value = {"/view/{docId}", "/view/{docId}/{docSn}"})
+    @GetMapping(value = {"/{docId}", "/{docId}/{docSn}"})
     public Document view(@PathVariable("docId") long docId
             , @PathVariable("docSn") Optional<Long> docSn) throws Exception {
-        return documentService.findOne(docId)
-                .orElseThrow(() -> new Exception("not found."));
+        return documentService.findDocument(docId, docSn).orElseThrow();
     }
 
     @GetMapping("/list")

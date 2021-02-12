@@ -1,5 +1,6 @@
 package com.mac.doc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -16,16 +17,18 @@ import java.time.ZonedDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class Base implements Serializable {
 
+    @JsonIgnore
     @CreatedBy
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rgsn_user_id", referencedColumnName = "user_id")
     private User rgsnUser;
 
     @CreationTimestamp
     private ZonedDateTime rgsnDttm;
 
+    @JsonIgnore
     @LastModifiedBy
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "modi_user_id", referencedColumnName = "user_id")
     private User modiUser;
 

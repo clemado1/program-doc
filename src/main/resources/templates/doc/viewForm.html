@@ -6,18 +6,26 @@
     <input th:id="docId" th:name="docId" th:value="${docId}" type="hidden">
     <input th:id="docSn" th:name="docSn" th:value="${docSn}" type="hidden">
     <h1 th:id="title" th:name="title"></h1>
+    <span th:id="docStat" th:name="docStat"></span>
     <div id="toc"></div>
     <button id="write-doc" th:text="New"></button>
+    <button id="modify-doc" th:text="Modify"></button>
     <div id="viewer">
         <strong>Loading...</strong>
     </div>
     <button id="publish-doc" th:text="Publish"></button>
     <script>
         let docId = document.getElementById("docId").value;
+        let docSn = document.getElementById("docSn").value;
 
         const newBtn = document.getElementById("write-doc");
         newBtn.addEventListener('click', function () {
             location.href = `/doc/write/${docId}`;
+        });
+
+        const modBtn = document.getElementById("modify-doc");
+        modBtn.addEventListener('click', function () {
+            location.href = `/doc/write/${docId}/${docSn}`;
         });
 
         const pubBtn = document.getElementById("publish-doc");
@@ -30,7 +38,7 @@
                 },
                 body : JSON.stringify({
                     docId : docId,
-                    docSn : document.getElementById("docSn").value,
+                    docSn : docSn,
                 })
             }).then(res => res.json())
                 .then(docId => {
@@ -38,7 +46,7 @@
                 });
         });
 
-        fetch(`/api/doc/view/${docId}`,{
+        fetch(`/api/doc/${docId}`,{
             method: 'get',
             headers: {
                 'content-type': 'application/json',
@@ -48,6 +56,7 @@
             .then(json => {
                 console.log(json);
                 document.getElementById("title").innerText = json.title;
+                document.getElementById("docStat").innerText = json.documentData.docStat;
                 document.getElementById("docSn").value = json.documentData.docSn;
 
                 const Editor = toastui.Editor;
