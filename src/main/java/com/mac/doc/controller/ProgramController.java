@@ -1,7 +1,7 @@
 package com.mac.doc.controller;
 
 import com.mac.doc.domain.Program;
-import com.mac.doc.dto.PrgForm;
+import com.mac.doc.dto.ProgramDto;
 import com.mac.doc.service.ProgramService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,11 +17,11 @@ public class ProgramController {
     }
 
     @PostMapping("/create")
-    public Program create(@RequestBody PrgForm prgForm) {
+    public Program create(@RequestBody ProgramDto programDto) {
         Program program = Program.builder()
-                .programCd(prgForm.getProgramCd())
-                .programNm(prgForm.getProgramNm())
-                .programType(prgForm.getProgramType())
+                .programCd(programDto.getProgramCd())
+                .programNm(programDto.getProgramNm())
+                .programType(programDto.getProgramType())
                 .build();
 
         programService.saveProgram(program);
@@ -30,7 +30,7 @@ public class ProgramController {
     }
 
     @GetMapping("/list")
-    public List<Program> list() {
+    public List<ProgramDto> list() {
         return programService.findPrograms();
     }
 }

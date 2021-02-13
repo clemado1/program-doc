@@ -1,6 +1,7 @@
 package com.mac.doc.service;
 
 import com.mac.doc.domain.Program;
+import com.mac.doc.dto.ProgramDto;
 import com.mac.doc.repository.ProgramRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +18,7 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Override
-    public List<Program> findPrograms() {
+    public List<ProgramDto> findPrograms() {
         return programRepository.findAllPrograms();
     }
 

@@ -4,7 +4,8 @@ import com.mac.doc.domain.Document;
 import com.mac.doc.domain.DocumentData;
 import com.mac.doc.domain.Program;
 import com.mac.doc.domain.type.DocStat;
-import com.mac.doc.dto.DocForm;
+import com.mac.doc.dto.DocumentDto;
+import com.mac.doc.dto.ProgramDto;
 import com.mac.doc.service.DocumentService;
 import com.mac.doc.service.ProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class DocumentController {
     }
 
     @PostMapping("/create")
-    public Long create(@RequestBody DocForm form) {
+    public Long create(@RequestBody DocumentDto form) {
         Program program = Program.builder()
                 .programCd(form.getProgramCd())
                 .build();
@@ -52,7 +53,7 @@ public class DocumentController {
     }
 
     @PostMapping("/save")
-    public DocumentData save(@RequestBody DocForm form) {
+    public DocumentData save(@RequestBody DocumentDto form) {
         DocumentData documentData = DocumentData.builder()
                 .docSn(Long.parseLong(form.getDocSn()))
                 .document(Document.builder().docId(Long.parseLong(form.getDocId())).build())
@@ -65,7 +66,7 @@ public class DocumentController {
     }
 
     @PostMapping("/publish")
-    public Long publish(@RequestBody DocForm form) {
+    public Long publish(@RequestBody DocumentDto form) {
         Document document = Document.builder()
                 .docId(Long.parseLong(form.getDocId()))
                 .build();
@@ -88,7 +89,7 @@ public class DocumentController {
     }
 
     @GetMapping("/list")
-    public List<Program> list() {
+    public List<ProgramDto> list() {
         return programService.findPrograms();
     }
 }
