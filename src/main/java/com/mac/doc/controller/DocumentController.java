@@ -55,8 +55,8 @@ public class DocumentController {
     @PostMapping("/save")
     public DocumentData save(@RequestBody DocumentDto form) {
         DocumentData documentData = DocumentData.builder()
-                .docSn(Long.parseLong(form.getDocSn()))
-                .document(Document.builder().docId(Long.parseLong(form.getDocId())).build())
+                .docSn(form.getDocSn())
+                .document(Document.builder().docId(form.getDocId()).build())
                 .docStat(form.getDocStat())
                 .contents(form.getContents())
                 .version(form.getVersion())
@@ -68,11 +68,11 @@ public class DocumentController {
     @PostMapping("/publish")
     public Long publish(@RequestBody DocumentDto form) {
         Document document = Document.builder()
-                .docId(Long.parseLong(form.getDocId()))
+                .docId(form.getDocId())
                 .build();
 
         DocumentData documentData = DocumentData.builder()
-                .docSn(Long.parseLong(form.getDocSn()))
+                .docSn(form.getDocSn())
                 .document(document)
                 .docStat(DocStat.PUBLISHED)
                 .build();

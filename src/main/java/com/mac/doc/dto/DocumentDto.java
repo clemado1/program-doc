@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DocumentDto {
-    private String docId;
-    private String docSn;
+    private Long docId;
+    private Long docSn;
     private String title;
     private DocStat docStat;
     private String contents;
