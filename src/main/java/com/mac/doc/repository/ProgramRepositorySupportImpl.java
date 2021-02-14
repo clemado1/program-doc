@@ -29,22 +29,19 @@ public class ProgramRepositorySupportImpl implements ProgramRepositorySupport {
 
     public List<ProgramDto> findAllPrograms() {
         return queryFactory
-                .select(
-                        Projections.constructor(
-                                ProgramDto.class,
-                                program.programCd,
-                                program.programNm,
-                                program.programType,
-                                set(Projections.fields(DocumentDto.class, document.docId, document.title)),
-                                user.userId.as("picUserId"),
-                                user.userNm.as("picUserNm")))
                 .from(program)
                 .leftJoin(program.documents, document)
-                .fetchJoin()
                 .leftJoin(program.picUser, user)
-                .fetchJoin()
-                .distinct()
-                .fetch();
+                .transform(groupBy(program).list(
+                    Projections.constructor(
+                            ProgramDto.class,
+                            program.programCd,
+                            program.programNm,
+                            program.programType,
+                            set(Projections.fields(DocumentDto.class, document.docId, document.title)),
+                            user.userId.as("picUserId"),
+                            user.userNm.as("picUserNm"))
+                ));
     }
 
 }
