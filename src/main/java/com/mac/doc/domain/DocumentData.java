@@ -33,6 +33,7 @@ public class DocumentData extends Base {
     @Enumerated(EnumType.STRING)
     private DocStat docStat;
 
+    @Lob
     private String contents;
 
     private Double version = 1.0;
@@ -42,7 +43,7 @@ public class DocumentData extends Base {
             joinColumns = {@JoinColumn(name = "doc_sn")},
             inverseJoinColumns = {@JoinColumn(name = "label_id")}
     )
-    private Set<Label> label = new HashSet<>();
+    private final Set<Label> label = new HashSet<>();
 
     @Builder
     public DocumentData(Long docSn, Document document, DocStat docStat, String contents, Double version, Set<Label> label) {

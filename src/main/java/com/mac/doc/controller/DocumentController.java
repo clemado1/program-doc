@@ -2,12 +2,12 @@ package com.mac.doc.controller;
 
 import com.mac.doc.domain.Document;
 import com.mac.doc.domain.DocumentData;
-import com.mac.doc.domain.Program;
+import com.mac.doc.domain.Function;
 import com.mac.doc.domain.type.DocStat;
 import com.mac.doc.dto.DocumentDto;
-import com.mac.doc.dto.ProgramDto;
+import com.mac.doc.dto.FunctionDto;
 import com.mac.doc.service.DocumentService;
-import com.mac.doc.service.ProgramService;
+import com.mac.doc.service.FunctionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,26 +19,24 @@ import java.util.Optional;
 public class DocumentController {
 
     private final DocumentService documentService;
-    private final ProgramService programService;
+    private final FunctionService functionService;
 
     @Autowired
-    public DocumentController(DocumentService documentService, ProgramService programService) {
+    public DocumentController(DocumentService documentService, FunctionService functionService) {
         this.documentService = documentService;
-        this.programService = programService;
+        this.functionService = functionService;
     }
 
     @PostMapping("/create")
     public Long create(@RequestBody DocumentDto form) {
-        Program program = Program.builder()
-                .programCd(form.getProgramCd())
+        Function function = Function.builder()
+                .functionCd(form.getFunctionCd())
                 .build();
 
         Document document = Document.builder()
                 .title(form.getTitle())
-                .program(program)
+                .function(function)
                 .build();
-
-        documentService.saveDocument(document);
 
         DocumentData documentData = DocumentData.builder()
                 .document(document)
@@ -47,7 +45,7 @@ public class DocumentController {
                 .version(form.getVersion())
                 .build();
 
-        documentService.saveDocumentData(documentData);
+        documentService.saveDocument(document, documentData);
 
         return document.getDocId();
     }
@@ -89,7 +87,7 @@ public class DocumentController {
     }
 
     @GetMapping("/list")
-    public List<ProgramDto> list() {
-        return programService.findPrograms();
+    public List<FunctionDto> list() {
+        return functionService.findFunctions();
     }
 }

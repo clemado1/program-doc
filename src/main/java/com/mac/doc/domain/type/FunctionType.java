@@ -8,30 +8,30 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public enum ProgramType {
+public enum FunctionType {
     USER("USER", "사용자"),
     PAY("PAY", "결제"),
     SERVICE("SERVICE", "서비스"),
     COMM("COMM", "공통");
 
-    private static final Map<String, ProgramType> stringToEnum =
+    private static final Map<String, FunctionType> stringToEnum =
             Stream.of(values()).collect(Collectors.toMap(Objects::toString, e -> e));
 
-    private final String programType;
-    private final String programTypeDesc;
+    private final String functionType;
+    private final String functionTypeDesc;
 
-    ProgramType(String programType, String programTypeDesc) {
-        this.programType = programType;
-        this.programTypeDesc = programTypeDesc;
+    FunctionType(String functionType, String functionTypeDesc) {
+        this.functionType = functionType;
+        this.functionTypeDesc = functionTypeDesc;
     }
 
     @JsonCreator
-    public static ProgramType fromString(String symbol) {
+    public static FunctionType fromString(String symbol) {
         return stringToEnum.get(symbol);
     }
 
     @JsonValue
-    public String getProgramType() {
-        return programType;
+    public String getFunctionType() {
+        return functionType;
     }
 }

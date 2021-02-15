@@ -5,7 +5,7 @@
 <div th:replace="fragments/doc_common :: docBody"></div>
     <input id="docId" name="docId" th:value="${docId}" type="hidden"/>
     <input id="docSn" name="docSn" th:value="${docSn}" type="hidden"/>
-    <input id="programCd" name="programCd" th:value="${programCd}" type="hidden"/>
+    <input id="functionCd" name="functionCd" th:value="${functionCd}" type="hidden"/>
     <h1>writeform</h1>
     <input id="title" name="title" placeholder="title" type="text"/>
     version: <input id="version" name="version" step="0.01" type="number" value="1.00"/>
@@ -65,7 +65,7 @@
             body : JSON.stringify({
                 docId : document.getElementById("docId").value,
                 docSn : document.getElementById("docSn").value,
-                programCd : document.getElementById("programCd").value,
+                functionCd : document.getElementById("functionCd").value,
                 title : document.getElementById("title").value,
                 docStat : document.getElementById("docStat").value,
                 version : document.getElementById("version").value,

@@ -13,7 +13,7 @@ public class DocumentDto {
     private DocStat docStat;
     private String contents;
     private Double version;
-    private String programCd;
+    private String functionCd;
 
     public void setDocStat(String docStat) {
         this.docStat = DocStat.valueOf(docStat.toUpperCase());

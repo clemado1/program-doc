@@ -2,11 +2,11 @@ package com.mac.doc.service;
 
 import com.mac.doc.domain.*;
 import com.mac.doc.domain.type.DocStat;
-import com.mac.doc.domain.type.ProgramType;
+import com.mac.doc.domain.type.FunctionType;
 import com.mac.doc.repository.DocumentRepository;
 import com.mac.doc.repository.LabelRepository;
-import com.mac.doc.repository.ProgramRepository;
-import com.mac.doc.repository.ProgramRepositorySupportImpl;
+import com.mac.doc.repository.FunctionRepository;
+import com.mac.doc.repository.FunctionRepositorySupportImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +34,13 @@ class DocumentServiceTest {
     LabelRepository labelRepository;
 
     @Autowired
-    ProgramService programService;
+    FunctionService functionService;
 
     @Autowired
-    ProgramRepository programRepository;
+    FunctionRepository functionRepository;
 
     @Autowired
-    ProgramRepositorySupportImpl programRepositorySupportImpl;
+    FunctionRepositorySupportImpl functionRepositorySupportImpl;
 
     @Test
     void saveDocument() {
@@ -50,13 +50,13 @@ class DocumentServiceTest {
         labelSet.add(label1);
         labelSet.add(label2);
 
-        Program program = Program.builder().programCd("COM10").programNm("TEST").build();
+        Function function = Function.builder().functionCd("COM10").functionNm("TEST").build();
 
         DocumentData documentData = DocumentData.builder().docStat(DocStat.TEMPSAVE).contents("content1").label(labelSet).build();
 
         Document doc = Document.builder().documentData(documentData).title("title1").build();
 
-        documentService.saveDocument(doc);
+        documentService.saveDocument(doc, documentData);
         Document newdoc = documentService.findDocument(doc.getDocId(), Optional.empty()).get();
 
         Assertions.assertThat(newdoc.getDocId()).isEqualTo(doc.getDocId());
@@ -64,7 +64,7 @@ class DocumentServiceTest {
 
     @Test
     public void querydsl() {
-        programRepositorySupportImpl.findAllPrograms();
+        functionRepositorySupportImpl.findAllFunctions();
     }
 
     @Test
@@ -73,11 +73,11 @@ class DocumentServiceTest {
 
     @Test
     void findOne() {
-        ProgramType pt = ProgramType.valueOf("USER");
+        FunctionType pt = FunctionType.valueOf("USER");
     }
 
     @Test
     void findDocuments() {
-        programRepository.findAll();
+        functionRepository.findAll();
     }
 }

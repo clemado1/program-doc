@@ -5,7 +5,7 @@
     <title>List</title>
 </head>
 <script>
-    fetch("/api/prg/list",{
+    fetch("/api/fnc/list",{
         method: 'get',
         headers: {
             'content-type': 'application/json',
@@ -14,7 +14,7 @@
     }).then(res => res.json())
         .then(json => {
             console.log(json);
-            let programs = document.getElementById("program-list");
+            let functions = document.getElementById("function-list");
 
             const htmlMarkup = json.map(function (data) {
                 let docUi = "";
@@ -32,44 +32,44 @@
 
                 return `
                     <li>
-                        <p>[${data.programCd}] ${data.programNm}</p>
+                        <p>[${data.functionCd}] ${data.functionNm}</p>
                         ${docUi}
                     </li>
                     `
             });
 
-            programs.innerHTML = htmlMarkup;
+            functions.innerHTML = htmlMarkup;
         })
 </script>
 <body>
 <div class="container">
-    <div id="new-program">
-        <input type="text" id="programCd" name="programCd">
-        <input type="text" id="programNm" name="programNm">
-        <input type="text" id="programType" name="programType">
+    <div id="new-function">
+        <input type="text" id="functionCd" name="functionCd">
+        <input type="text" id="functionNm" name="functionNm">
+        <input type="text" id="functionType" name="functionType">
         <button id="form-submit" th:text="Create" type="submit"></button>
     </div>
-    <ul id="program-list">
+    <ul id="function-list">
     </ul>
 </div>
 <script>
     const saveBtn = document.querySelector("#form-submit");
     saveBtn.addEventListener('click', function () {
-        fetch("/api/prg/create", {
+        fetch("/api/fnc/create", {
             method: 'post',
             headers: {
                 'content-type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem("jwt"),
             },
             body : JSON.stringify({
-                programCd : document.getElementById("programCd").value,
-                programNm : document.getElementById("programNm").value,
-                programType : document.getElementById("programType").value,
+                functionCd : document.getElementById("functionCd").value,
+                functionNm : document.getElementById("functionNm").value,
+                functionType : document.getElementById("functionType").value,
             })
         }).then(res => res.json())
-            .then(program => {
-                console.log(program);
-                location.href = `/doc/write?programCd=${program.programCd}`;
+            .then(f => {
+                console.log(f);
+                location.href = `/doc/write?functionCd=${f.functionCd}`;
             });
     });
 </script>

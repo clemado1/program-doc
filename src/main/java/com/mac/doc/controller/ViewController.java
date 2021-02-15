@@ -20,12 +20,12 @@ public class ViewController {
     public String writeForm(
             @PathVariable("docId") Optional<Long> docId,
             @PathVariable("docSn") Optional<Long> docSn,
-            @RequestParam("programCd") Optional<String> programCd,
+            @RequestParam("functionCd") Optional<String> functionCd,
             Model model) {
 
-        docId.ifPresent(d -> model.addAttribute("docId", d));
-        docSn.ifPresent(d -> model.addAttribute("docSn", d));
-        programCd.ifPresent(d -> model.addAttribute("programCd", d));
+        docId.ifPresent(id -> model.addAttribute("docId", id));
+        docSn.ifPresent(sn -> model.addAttribute("docSn", sn));
+        functionCd.ifPresent(f -> model.addAttribute("functionCd", f));
 
         return "/doc/writeForm";
     }

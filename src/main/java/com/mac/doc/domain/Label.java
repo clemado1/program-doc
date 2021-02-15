@@ -14,14 +14,12 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "labelCache")
 public class Label extends Base {
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "label")
+    private final Set<DocumentData> documentData = new HashSet<>();
     @Id
     @Column(name = "label_id")
     private long labelId;
-
     private String labelNm;
-
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "label")
-    private final Set<DocumentData> documentData = new HashSet<>();
 
     @Builder
     public Label(long labelId, String labelNm) {

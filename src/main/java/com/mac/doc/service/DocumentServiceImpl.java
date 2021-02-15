@@ -24,8 +24,10 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Document saveDocument(Document doc) {
+    @Transactional
+    public Document saveDocument(Document doc, DocumentData docData) {
         documentRepository.save(doc);
+        saveDocumentData(docData);
 
         return doc;
     }
@@ -56,7 +58,7 @@ public class DocumentServiceImpl implements DocumentService {
         UserDetails userDetails = (UserDetails) principal;
 
         return documentRepository.findById(docId)
-                .map(document -> document.getProgram().getPicUser().getUserId().equals(userDetails.getUsername()))
+                .map(document -> document.getFunction().getHoldUser().getUserId().equals(userDetails.getUsername()))
                 .orElse(false);
     }
 

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DocumentService {
-    Document saveDocument(Document doc);
+    Document saveDocument(Document doc, DocumentData docData);
 
     DocumentData saveDocumentData(DocumentData docData);
 
