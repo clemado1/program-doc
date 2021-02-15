@@ -35,9 +35,9 @@ public class Document extends Base {
     @Builder
     public Document(Long docId, Function function, DocumentData documentData, String title) {
         this.docId = docId;
+        this.title = title;
         this.function = function;
         this.documentData = documentData;
-        this.title = title;
     }
 
     public void setDocumentData(DocumentData documentData) {

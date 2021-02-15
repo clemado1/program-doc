@@ -22,7 +22,7 @@
         });
 
         let docId = document.getElementById("docId").value;
-        if (!isNaN(docId)) {
+        if (docId && !isNaN(docId)) {
 
             let url = document.getElementById("docSn").value
                 ? `/api/doc/${docId}/${document.getElementById("docSn").value}`
@@ -53,7 +53,7 @@
     const saveBtn = document.querySelector("#form-submit");
     saveBtn.addEventListener('click', function () {
         const docId = document.getElementById("docId").value;
-        const saveUrl = isNaN(docId) ? "/api/doc/create" : "/api/doc/save";
+        const saveUrl = docId && !isNaN(docId) ? "/api/doc/save" : "/api/doc/create";
         console.log(saveUrl);
 
         fetch(saveUrl, {

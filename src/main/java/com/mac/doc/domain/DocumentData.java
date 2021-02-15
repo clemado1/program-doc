@@ -43,7 +43,7 @@ public class DocumentData extends Base {
             joinColumns = {@JoinColumn(name = "doc_sn")},
             inverseJoinColumns = {@JoinColumn(name = "label_id")}
     )
-    private final Set<Label> label = new HashSet<>();
+    private Set<Label> label = new HashSet<>();
 
     @Builder
     public DocumentData(Long docSn, Document document, DocStat docStat, String contents, Double version, Set<Label> label) {

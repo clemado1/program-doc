@@ -23,9 +23,20 @@ public class ViewController {
             @RequestParam("functionCd") Optional<String> functionCd,
             Model model) {
 
-        docId.ifPresent(id -> model.addAttribute("docId", id));
-        docSn.ifPresent(sn -> model.addAttribute("docSn", sn));
-        functionCd.ifPresent(f -> model.addAttribute("functionCd", f));
+        // ifPresent 로 설정 시 view 에서 optional.empty string type 으로 변환되는 문제로 수정
+        // TODO: 간단한 방법 찾아보기
+        docId.ifPresentOrElse(
+                id -> model.addAttribute("docId", id),
+                () -> model.addAttribute("docId", null)
+        );
+        docSn.ifPresentOrElse(
+                sn -> model.addAttribute("docSn", sn),
+                () -> model.addAttribute("docSn", null)
+        );
+        functionCd.ifPresentOrElse(
+                f -> model.addAttribute("functionCd", f),
+                () -> model.addAttribute("functionCd", null)
+        );
 
         return "/doc/writeForm";
     }
