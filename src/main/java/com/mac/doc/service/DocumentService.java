@@ -21,5 +21,7 @@ public interface DocumentService {
 
     Optional<DocumentData> findDocumentData(Long docSn);
 
+    Optional<DocumentData> findFirstDocumentData(Document document);
+
     List<Document> findDocuments();
 }

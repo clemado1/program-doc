@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface DocumentDataRepository extends JpaRepository<DocumentData, Long>, DocumentDataRepositorySupport {
-    Optional<DocumentData> findFirstByDocumentOrderByDocSn(Document document);
+    Optional<DocumentData> findTopByDocumentOrderByDocSnDesc(Document document);
 }

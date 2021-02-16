@@ -46,7 +46,11 @@
                 });
         });
 
-        fetch(`/api/doc/${docId}`,{
+        let url = docSn && !isNaN(docSn) ?
+            `/api/doc/${docId}/${docSn}`
+            : `/api/doc/${docId}`
+
+        fetch(url, {
             method: 'get',
             headers: {
                 'content-type': 'application/json',

@@ -28,7 +28,7 @@ public class DocumentController {
     }
 
     @PostMapping("/create")
-    public Long create(@RequestBody DocumentDto form) {
+    public Document create(@RequestBody DocumentDto form) {
         Function function = Function.builder()
                 .functionCd(form.getFunctionCd())
                 .build();
@@ -47,7 +47,7 @@ public class DocumentController {
 
         documentService.saveDocument(document, documentData);
 
-        return document.getDocId();
+        return document;
     }
 
     @PostMapping("/save")
@@ -83,7 +83,11 @@ public class DocumentController {
     @GetMapping(value = {"/{docId}", "/{docId}/{docSn}"})
     public Document view(@PathVariable("docId") long docId
             , @PathVariable("docSn") Optional<Long> docSn) throws Exception {
-        return documentService.findDocument(docId, docSn).orElseThrow();
+        Document document = documentService.findDocument(docId, docSn).orElseThrow();
+        if (document.getDocumentData() == null) {
+            documentService.findFirstDocumentData(document).ifPresent(document::setDocumentData);
+        }
+        return document;
     }
 
     @GetMapping("/list")

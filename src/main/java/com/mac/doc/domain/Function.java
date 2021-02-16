@@ -15,7 +15,6 @@ import java.util.Set;
 @Table(name = "function")
 @Getter
 @ToString(exclude = {"documents", "holdUser"})
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class, property = "functionCd")
 public class Function extends Base {
     @Id
@@ -32,6 +31,8 @@ public class Function extends Base {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "function")
     private final Set<Document> documents = new HashSet<>();
+
+    public Function() {}
 
     @Builder
     public Function(String functionCd, String functionNm, FunctionType functionType) {

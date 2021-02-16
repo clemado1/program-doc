@@ -1,6 +1,7 @@
 package com.mac.doc.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -11,7 +12,6 @@ import javax.persistence.*;
 @Table(name = "document")
 @Getter
 @ToString(exclude = {"function"})
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "docCache")
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "docId")
 public class Document extends Base {
@@ -38,6 +38,10 @@ public class Document extends Base {
         this.title = title;
         this.function = function;
         this.documentData = documentData;
+    }
+
+    public Document() {
+
     }
 
     public void setDocumentData(DocumentData documentData) {

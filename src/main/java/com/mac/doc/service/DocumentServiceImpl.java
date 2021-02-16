@@ -80,6 +80,11 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    public Optional<DocumentData> findFirstDocumentData(Document document) {
+        return documentDataRepository.findTopByDocumentOrderByDocSnDesc(document);
+    }
+
+    @Override
     public List<Document> findDocuments() {
         return documentRepository.findAll();
     }
