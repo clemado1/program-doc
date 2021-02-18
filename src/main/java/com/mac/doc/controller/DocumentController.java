@@ -51,7 +51,7 @@ public class DocumentController {
     }
 
     @PostMapping("/save")
-    public DocumentData save(@RequestBody DocumentDto form) {
+    public Document save(@RequestBody DocumentDto form) {
         DocumentData documentData = DocumentData.builder()
                 .docSn(form.getDocSn())
                 .document(Document.builder().docId(form.getDocId()).build())
@@ -60,7 +60,7 @@ public class DocumentController {
                 .version(form.getVersion())
                 .build();
 
-        return documentService.saveDocumentData(documentData);
+        return documentService.saveDocumentData(documentData).getDocument();
     }
 
     @PostMapping("/publish")

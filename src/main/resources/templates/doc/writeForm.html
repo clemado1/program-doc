@@ -71,10 +71,7 @@
                 version : document.getElementById("version").value,
                 contents : editor.getMarkdown(),
             })
-        }).then(res => {
-            console.log(res);
-            return res.json();
-        })
+        }).then(res => res.json())
             .then(doc => {
                 location.href = `/doc/${doc.docId}`;
             });

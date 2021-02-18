@@ -33,6 +33,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    @Transactional
     public DocumentData saveDocumentData(DocumentData docData) {
         documentDataRepository.save(docData);
         if (docData.getDocStat() == DocStat.PUBLISHED) {

@@ -47,7 +47,7 @@ public class DocumentRepositorySupportImpl implements DocumentRepositorySupport 
                         ))
                         .from(document)
                         .join(documentData).on(document.docId.eq(documentData.document.docId))
-                        .join(document.function, function)
+                        .join(document.function)
                         .where(document.docId.eq(docId), documentData.docSn.eq(docSn))
                         .fetchOne());
     }

@@ -2,7 +2,6 @@ package com.mac.doc.service;
 
 import com.mac.doc.domain.*;
 import com.mac.doc.domain.type.DocStat;
-import com.mac.doc.domain.type.FunctionType;
 import com.mac.doc.repository.DocumentRepository;
 import com.mac.doc.repository.LabelRepository;
 import com.mac.doc.repository.FunctionRepository;
@@ -63,21 +62,47 @@ class DocumentServiceTest {
     }
 
     @Test
-    public void querydsl() {
-        functionRepositorySupportImpl.findAllFunctions();
+    void testSaveDocument() {
     }
 
     @Test
-    void updateDocument() {
+    void saveDocumentData() {
     }
 
     @Test
-    void findOne() {
-        FunctionType pt = FunctionType.valueOf("USER");
+    void publishDocument() {
     }
 
     @Test
-    void findDocuments() {
-        functionRepository.findAll();
+    void validateWriter() {
+    }
+
+    @Test
+    void testUpdateDocument() {
+    }
+
+    @Test
+    void findDocument() {
+        documentService.findDocument(1L, Optional.empty()).ifPresent(document -> {
+            Assertions.assertThat(document.getDocumentData().getDocSn()).isEqualTo(4L);
+        });
+        documentService.findDocument(1L, Optional.of(4L)).ifPresent(document -> {
+            Assertions.assertThat(document.getDocumentData().getDocSn()).isEqualTo(4L);
+        });
+        documentService.findDocument(1L, Optional.of(5L)).ifPresent(document -> {
+            Assertions.assertThat(document.getDocumentData().getDocSn()).isEqualTo(5L);
+        });
+    }
+
+    @Test
+    void findDocumentData() {
+    }
+
+    @Test
+    void findFirstDocumentData() {
+    }
+
+    @Test
+    void testFindDocuments() {
     }
 }

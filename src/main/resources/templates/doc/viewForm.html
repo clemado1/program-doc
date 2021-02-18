@@ -20,11 +20,13 @@
 
         const newBtn = document.getElementById("write-doc");
         newBtn.addEventListener('click', function () {
+            let docSn = document.getElementById("docSn").value;
             location.href = `/doc/write/${docId}`;
         });
 
         const modBtn = document.getElementById("modify-doc");
         modBtn.addEventListener('click', function () {
+            let docSn = document.getElementById("docSn").value;
             location.href = `/doc/write/${docId}/${docSn}`;
         });
 
