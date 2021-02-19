@@ -48,7 +48,7 @@ public class DocumentController {
         documentService.saveDocument(document, documentData);
 
         DocumentDto documentDto = new DocumentDto();
-        documentDto.of(Optional.of(document), Optional.of(documentData));
+        documentDto.of(document, documentData);
 
         return documentDto;
     }
@@ -65,7 +65,7 @@ public class DocumentController {
 
 
         DocumentDto documentDto = new DocumentDto();
-        documentDto.of(Optional.empty(), Optional.of(documentData));
+        documentDto.of(null, documentData);
 
         return documentDto;
     }
@@ -90,13 +90,16 @@ public class DocumentController {
     @GetMapping(value = {"/{docId}", "/{docId}/{docSn}"})
     public DocumentDto view(@PathVariable("docId") long docId
             , @PathVariable("docSn") Optional<Long> docSn) throws Exception {
-        Document document = documentService.findDocument(docId, docSn).orElseThrow();
-        if (document.getDocumentData() == null) {
-            documentService.findFirstDocumentData(document).ifPresent(document::setDocumentData);
+        Document document = Document.builder().docId(docId).build();
+        DocumentDto documentDto = documentService.findDocument(docId, docSn).orElseThrow();
+        if (documentDto.getDocSn() == null) {
+            documentService.findFirstDocumentData(document).ifPresent(documentData -> {
+                documentDto.setDocSn(documentData.getDocSn());
+                documentDto.setDocStat(documentData.getDocStat());
+                documentDto.setContents(documentData.getContents());
+                documentDto.setVersion(documentData.getVersion());
+            });
         }
-
-        DocumentDto documentDto = new DocumentDto();
-        documentDto.of(Optional.of(document), Optional.of(document.getDocumentData()));
 
         return documentDto;
     }

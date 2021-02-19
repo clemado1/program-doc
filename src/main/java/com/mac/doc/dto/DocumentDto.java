@@ -7,8 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Optional;
-
 @Getter
 @Setter
 public class DocumentDto {
@@ -22,6 +20,10 @@ public class DocumentDto {
     private String functionNm;
     private String holdUserId;
     private String holdUserNm;
+    private String rgsnUserId;
+    private String rgsnUserNm;
+    private String modiUserId;
+    private String modiUserNm;
 
     public void setDocStat(String docStat) {
         this.docStat = DocStat.valueOf(docStat.toUpperCase());
@@ -33,7 +35,7 @@ public class DocumentDto {
     public DocumentDto() {}
 
     @Builder
-    public DocumentDto(Long docId, Long docSn, String title, DocStat docStat, String contents, Double version, String functionCd, String functionNm, String holdUserId, String holdUserNm) {
+    public DocumentDto(Long docId, Long docSn, String title, DocStat docStat, String contents, Double version, String functionCd, String functionNm, String holdUserId, String holdUserNm, String rgsnUserId, String rgsnUserNm, String modiUserId, String modiUserNm) {
         this.docId = docId;
         this.docSn = docSn;
         this.title = title;
@@ -44,27 +46,33 @@ public class DocumentDto {
         this.functionNm = functionNm;
         this.holdUserId = holdUserId;
         this.holdUserNm = holdUserNm;
+        this.rgsnUserId = rgsnUserId;
+        this.rgsnUserNm = rgsnUserNm;
+        this.modiUserId = modiUserId;
+        this.modiUserNm = modiUserNm;
     }
 
-    public DocumentDto of(Optional<Document> document, Optional<DocumentData> documentData) {
+    public DocumentDto of(Document document, DocumentData documentData) {
         DocumentDto documentDto = new DocumentDto();
-        document.ifPresent(document1 -> {
-            documentDto.setDocId(document1.getDocId());
-            documentDto.setTitle(document1.getTitle());
-            documentDto.setFunctionCd(document1.getFunction().getFunctionCd());
-            documentDto.setFunctionNm(document1.getFunction().getFunctionNm());
-            documentDto.setHoldUserId(document1.getFunction().getHoldUser().getUserId());
-            documentDto.setHoldUserNm(document1.getFunction().getHoldUser().getUserNm());
 
-        });
+        if (document != null) {
+            documentDto.setDocId(document.getDocId());
+            documentDto.setTitle(document.getTitle());
+            documentDto.setFunctionCd(document.getFunction().getFunctionCd());
+            documentDto.setFunctionNm(document.getFunction().getFunctionNm());
+            if (document.getFunction().getHoldUser() != null) {
+                documentDto.setHoldUserId(document.getFunction().getHoldUser().getUserId());
+                documentDto.setHoldUserNm(document.getFunction().getHoldUser().getUserNm());
+            }
+        }
 
-        documentData.ifPresent(documentData1 -> {
-            documentDto.setDocId(documentData1.getDocument().getDocId());
-            documentDto.setDocSn(documentData1.getDocSn());
-            documentDto.setDocStat(documentData1.getDocStat());
-            documentDto.setContents(documentData1.getContents());
-            documentDto.setVersion(documentData1.getVersion());
-        });
+        if (documentData != null) {
+            documentDto.setDocId(documentData.getDocument().getDocId());
+            documentDto.setDocSn(documentData.getDocSn());
+            documentDto.setDocStat(documentData.getDocStat());
+            documentDto.setContents(documentData.getContents());
+            documentDto.setVersion(documentData.getVersion());
+        }
 
         return documentDto;
     }

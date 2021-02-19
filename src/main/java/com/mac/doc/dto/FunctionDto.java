@@ -54,7 +54,7 @@ public class FunctionDto {
         Set<DocumentDto> documents = function.getDocuments().stream()
                 .map(document -> {
                     DocumentDto documentDto = new DocumentDto();
-                    return documentDto.of(Optional.of(document), Optional.empty());
+                    return documentDto.of(document, null);
                 }).collect(Collectors.toSet());
 
         functionDto.setDocuments(documents);

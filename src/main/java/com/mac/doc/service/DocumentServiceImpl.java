@@ -3,6 +3,7 @@ package com.mac.doc.service;
 import com.mac.doc.domain.Document;
 import com.mac.doc.domain.DocumentData;
 import com.mac.doc.domain.type.DocStat;
+import com.mac.doc.dto.DocumentDto;
 import com.mac.doc.repository.DocumentDataRepository;
 import com.mac.doc.repository.DocumentRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -69,10 +70,11 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Optional<Document> findDocument(Long docId, Optional<Long> docSn) {
+    public Optional<DocumentDto> findDocument(Long docId, Optional<Long> docSn) {
         return docSn
                 .map(sn -> documentRepository.findDocumentWithData(docId, sn))
-                .orElse(documentRepository.findById(docId));
+                .orElseGet(() -> documentRepository.findById(docId)
+                        .map(d -> new DocumentDto().of(d, null)));
     }
 
     @Override

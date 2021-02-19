@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Table(name = "document")
 @Getter
 @ToString(exclude = {"function"})
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "docCache")
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "docId")
 public class Document extends Base {
@@ -37,10 +38,6 @@ public class Document extends Base {
         this.title = title;
         this.function = function;
         this.documentData = documentData;
-    }
-
-    public Document() {
-
     }
 
     public void setDocumentData(DocumentData documentData) {

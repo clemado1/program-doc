@@ -2,6 +2,7 @@ package com.mac.doc.service;
 
 import com.mac.doc.domain.Document;
 import com.mac.doc.domain.DocumentData;
+import com.mac.doc.dto.DocumentDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ public interface DocumentService {
 
     Document updateDocument(Document doc);
 
-    Optional<Document> findDocument(Long docId, Optional<Long> docSn);
+    Optional<DocumentDto> findDocument(Long docId, Optional<Long> docSn);
 
     Optional<DocumentData> findDocumentData(Long docSn);
 

@@ -2,12 +2,12 @@ package com.mac.doc.repository;
 
 import com.mac.doc.domain.Document;
 import com.mac.doc.domain.Function;
+import com.mac.doc.dto.DocumentDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import java.util.Optional;
 
-import static com.mac.doc.domain.QFunction.function;
 import static com.mac.doc.domain.QDocument.document;
 import static com.mac.doc.domain.QDocumentData.documentData;
 
@@ -27,22 +27,21 @@ public class DocumentRepositorySupportImpl implements DocumentRepositorySupport 
     }
 
     @Override
-    public Optional<Document> findDocumentWithData(Long docId, Long docSn) {
+    public Optional<DocumentDto> findDocumentWithData(Long docId, Long docSn) {
         return Optional.ofNullable(
                 queryFactory
                         .select(Projections.fields(
-                                Document.class,
+                                DocumentDto.class,
                                 document.docId,
-                                Projections.fields(
-                                        Function.class,
-                                        document.function.functionCd,
-                                        document.function.functionNm
-                                ).as("function"),
-                                documentData,
+                                document.function.functionCd,
+                                document.function.functionNm,
+                                document.function.functionType,
                                 document.title,
-                                document.rgsnUser,
+                                documentData.docSn,
+                                documentData.docStat,
+                                documentData.contents,
+                                documentData.version,
                                 document.rgsnDttm,
-                                document.modiUser,
                                 document.modiDttm
                         ))
                         .from(document)

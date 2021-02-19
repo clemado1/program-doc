@@ -2,6 +2,7 @@ package com.mac.doc.service;
 
 import com.mac.doc.domain.*;
 import com.mac.doc.domain.type.DocStat;
+import com.mac.doc.dto.DocumentDto;
 import com.mac.doc.repository.DocumentRepository;
 import com.mac.doc.repository.LabelRepository;
 import com.mac.doc.repository.FunctionRepository;
@@ -56,7 +57,7 @@ class DocumentServiceTest {
         Document doc = Document.builder().documentData(documentData).title("title1").build();
 
         documentService.saveDocument(doc, documentData);
-        Document newdoc = documentService.findDocument(doc.getDocId(), Optional.empty()).get();
+        DocumentDto newdoc = documentService.findDocument(doc.getDocId(), Optional.empty()).get();
 
         Assertions.assertThat(newdoc.getDocId()).isEqualTo(doc.getDocId());
     }
@@ -84,13 +85,13 @@ class DocumentServiceTest {
     @Test
     void findDocument() {
         documentService.findDocument(1L, Optional.empty()).ifPresent(document -> {
-            Assertions.assertThat(document.getDocumentData().getDocSn()).isEqualTo(4L);
+            Assertions.assertThat(document.getDocSn()).isEqualTo(4L);
         });
         documentService.findDocument(1L, Optional.of(4L)).ifPresent(document -> {
-            Assertions.assertThat(document.getDocumentData().getDocSn()).isEqualTo(4L);
+            Assertions.assertThat(document.getDocSn()).isEqualTo(4L);
         });
         documentService.findDocument(1L, Optional.of(5L)).ifPresent(document -> {
-            Assertions.assertThat(document.getDocumentData().getDocSn()).isEqualTo(5L);
+            Assertions.assertThat(document.getDocSn()).isEqualTo(5L);
         });
     }
 
