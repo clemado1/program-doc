@@ -62,15 +62,15 @@
             .then(json => {
                 console.log(json);
                 document.getElementById("title").innerText = json.title;
-                document.getElementById("docStat").innerText = json.documentData.docStat;
-                document.getElementById("docSn").value = json.documentData.docSn;
+                document.getElementById("docStat").innerText = json.docStat;
+                document.getElementById("docSn").value = json.docSn;
 
                 const Editor = toastui.Editor;
                 const codeSyntaxHighlight = Editor.plugin.codeSyntaxHighlight;
                 const viewer = Editor.factory({
                     el: document.getElementById('viewer'),
                     viewer: true,
-                    initialValue: json.documentData.contents,
+                    initialValue: json.contents,
                     plugins: [codeSyntaxHighlight],
                     customHTMLRenderer: {
                         heading(node, context) {

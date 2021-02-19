@@ -37,10 +37,8 @@
             }).then(res => res.json())
                 .then(doc => {
                     document.getElementById("title").value = doc.title;
-                    if (doc.documentData !== null) {
-                        document.getElementById("version").value = doc.documentData.version;
-                        editor.setMarkdown(doc.documentData.contents, false);
-                    }
+                    document.getElementById("version").value = doc.version;
+                    editor.setMarkdown(doc.contents, false);
                 });
         }
     </script>

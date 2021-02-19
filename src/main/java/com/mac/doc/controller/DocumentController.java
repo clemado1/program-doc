@@ -28,7 +28,7 @@ public class DocumentController {
     }
 
     @PostMapping("/create")
-    public Document create(@RequestBody DocumentDto form) {
+    public DocumentDto create(@RequestBody DocumentDto form) {
         Function function = Function.builder()
                 .functionCd(form.getFunctionCd())
                 .build();
@@ -47,11 +47,14 @@ public class DocumentController {
 
         documentService.saveDocument(document, documentData);
 
-        return document;
+        DocumentDto documentDto = new DocumentDto();
+        documentDto.of(Optional.of(document), Optional.of(documentData));
+
+        return documentDto;
     }
 
     @PostMapping("/save")
-    public Document save(@RequestBody DocumentDto form) {
+    public DocumentDto save(@RequestBody DocumentDto form) {
         DocumentData documentData = DocumentData.builder()
                 .docSn(form.getDocSn())
                 .document(Document.builder().docId(form.getDocId()).build())
@@ -60,7 +63,11 @@ public class DocumentController {
                 .version(form.getVersion())
                 .build();
 
-        return documentService.saveDocumentData(documentData).getDocument();
+
+        DocumentDto documentDto = new DocumentDto();
+        documentDto.of(Optional.empty(), Optional.of(documentData));
+
+        return documentDto;
     }
 
     @PostMapping("/publish")
@@ -81,13 +88,17 @@ public class DocumentController {
     }
 
     @GetMapping(value = {"/{docId}", "/{docId}/{docSn}"})
-    public Document view(@PathVariable("docId") long docId
+    public DocumentDto view(@PathVariable("docId") long docId
             , @PathVariable("docSn") Optional<Long> docSn) throws Exception {
         Document document = documentService.findDocument(docId, docSn).orElseThrow();
         if (document.getDocumentData() == null) {
             documentService.findFirstDocumentData(document).ifPresent(document::setDocumentData);
         }
-        return document;
+
+        DocumentDto documentDto = new DocumentDto();
+        documentDto.of(Optional.of(document), Optional.of(document.getDocumentData()));
+
+        return documentDto;
     }
 
     @GetMapping("/list")
