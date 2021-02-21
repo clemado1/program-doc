@@ -70,11 +70,46 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Optional<DocumentDto> findDocument(Long docId, Optional<Long> docSn) {
-        return docSn
-                .map(sn -> documentRepository.findDocumentWithData(docId, sn))
-                .orElseGet(() -> documentRepository.findById(docId)
-                        .map(d -> new DocumentDto().of(d, null)));
+    public DocumentDto findDocument(Document document) {
+        DocumentDto documentDto = new DocumentDto();
+
+        documentRepository.findById(document.getDocId()).ifPresent(document1 -> {
+            if (document1.getDocumentData() == null) {
+                documentDataRepository.findTopByDocumentOrderByDocSnDesc(document)
+                        .ifPresent(documentData -> documentDto.of(document1, documentData));
+            } else {
+                documentDto.of(document1, document1.getDocumentData());
+            }
+        });
+
+        return documentDto;
+    }
+
+    @Override
+    public DocumentDto findDocument(Document document, Long docSn) {
+        DocumentDto documentDto = new DocumentDto();
+        documentDataRepository.findByDocSnAndDocument(docSn, document)
+                .ifPresent(documentData -> documentDto.of(documentData.getDocument(), documentData));
+
+        return documentDto;
+    }
+
+    @Override
+    public DocumentDto compareDocumentData(Document document, Long docSn) {
+        return null;
+    }
+
+    @Override
+    public DocumentDto compareDocumentData(Document document, Long docSn1, Long docSn2) {
+        return null;
+    }
+
+    private String diffContents(String contents1, String contents2) {
+        String result = "";
+        char added = '+';
+        char deleted = '-';
+
+        return result;
     }
 
     @Override

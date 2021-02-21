@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface DocumentDataRepository extends JpaRepository<DocumentData, Long>, DocumentDataRepositorySupport {
     Optional<DocumentData> findTopByDocumentOrderByDocSnDesc(Document document);
+
+    Optional<DocumentData> findByDocSnAndDocument(Long docSn, Document document);
 }

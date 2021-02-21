@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,22 +42,18 @@ public class FunctionDto {
         this.holdUserNm = holdUserNm;
     }
 
-    public FunctionDto of(Function function) {
-        FunctionDto functionDto = new FunctionDto();
-        functionDto.setFunctionCd(function.getFunctionCd());
-        functionDto.setFunctionNm(function.getFunctionNm());
-        functionDto.setFunctionType(function.getFunctionType());
-        functionDto.setHoldUserId(function.getHoldUser().getUserId());
-        functionDto.setHoldUserNm(function.getHoldUser().getUserNm());
+    public void of(Function function) {
+        this.functionCd = function.getFunctionCd();
+        this.functionNm = function.getFunctionNm();
+        this.functionType = function.getFunctionType();
+        this.holdUserId = function.getHoldUser().getUserId();
+        this.holdUserNm = function.getHoldUser().getUserNm();
 
-        Set<DocumentDto> documents = function.getDocuments().stream()
+        this.documents = function.getDocuments().stream()
                 .map(document -> {
                     DocumentDto documentDto = new DocumentDto();
-                    return documentDto.of(document, null);
+                    documentDto.of(document, null);
+                    return documentDto;
                 }).collect(Collectors.toSet());
-
-        functionDto.setDocuments(documents);
-
-        return functionDto;
     }
 }

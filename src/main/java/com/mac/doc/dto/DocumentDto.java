@@ -52,28 +52,23 @@ public class DocumentDto {
         this.modiUserNm = modiUserNm;
     }
 
-    public DocumentDto of(Document document, DocumentData documentData) {
-        DocumentDto documentDto = new DocumentDto();
-
+    public void of(Document document, DocumentData documentData) {
         if (document != null) {
-            documentDto.setDocId(document.getDocId());
-            documentDto.setTitle(document.getTitle());
-            documentDto.setFunctionCd(document.getFunction().getFunctionCd());
-            documentDto.setFunctionNm(document.getFunction().getFunctionNm());
+            this.docId = document.getDocId();
+            this.title = document.getTitle();
+            this.functionCd = document.getFunction().getFunctionCd();
+            this.functionNm = document.getFunction().getFunctionNm();
             if (document.getFunction().getHoldUser() != null) {
-                documentDto.setHoldUserId(document.getFunction().getHoldUser().getUserId());
-                documentDto.setHoldUserNm(document.getFunction().getHoldUser().getUserNm());
+                this.holdUserId = document.getFunction().getHoldUser().getUserId();
+                this.holdUserNm = document.getFunction().getHoldUser().getUserNm();
             }
         }
-
         if (documentData != null) {
-            documentDto.setDocId(documentData.getDocument().getDocId());
-            documentDto.setDocSn(documentData.getDocSn());
-            documentDto.setDocStat(documentData.getDocStat());
-            documentDto.setContents(documentData.getContents());
-            documentDto.setVersion(documentData.getVersion());
+            this.docId = documentData.getDocument().getDocId();
+            this.docSn = documentData.getDocSn();
+            this.docStat = documentData.getDocStat();
+            this.contents = documentData.getContents();
+            this.version = documentData.getVersion();
         }
-
-        return documentDto;
     }
 }

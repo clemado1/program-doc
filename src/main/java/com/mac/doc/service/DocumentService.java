@@ -18,7 +18,13 @@ public interface DocumentService {
 
     Document updateDocument(Document doc);
 
-    Optional<DocumentDto> findDocument(Long docId, Optional<Long> docSn);
+    DocumentDto findDocument(Document document);
+
+    DocumentDto findDocument(Document document, Long docSn);
+
+    DocumentDto compareDocumentData(Document document, Long docSn);
+
+    DocumentDto compareDocumentData(Document document, Long docSn1, Long docSn2);
 
     Optional<DocumentData> findDocumentData(Long docSn);
 

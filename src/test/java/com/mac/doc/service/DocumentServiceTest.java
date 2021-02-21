@@ -57,7 +57,7 @@ class DocumentServiceTest {
         Document doc = Document.builder().documentData(documentData).title("title1").build();
 
         documentService.saveDocument(doc, documentData);
-        DocumentDto newdoc = documentService.findDocument(doc.getDocId(), Optional.empty()).get();
+        DocumentDto newdoc = documentService.findDocument(doc, null);
 
         Assertions.assertThat(newdoc.getDocId()).isEqualTo(doc.getDocId());
     }
@@ -84,15 +84,14 @@ class DocumentServiceTest {
 
     @Test
     void findDocument() {
-        documentService.findDocument(1L, Optional.empty()).ifPresent(document -> {
-            Assertions.assertThat(document.getDocSn()).isEqualTo(4L);
-        });
-        documentService.findDocument(1L, Optional.of(4L)).ifPresent(document -> {
-            Assertions.assertThat(document.getDocSn()).isEqualTo(4L);
-        });
-        documentService.findDocument(1L, Optional.of(5L)).ifPresent(document -> {
-            Assertions.assertThat(document.getDocSn()).isEqualTo(5L);
-        });
+        Document document = Document.builder().docId(1L).build();
+        DocumentDto documentDto = new DocumentDto();
+        documentDto = documentService.findDocument(document);
+        Assertions.assertThat(documentDto.getDocSn()).isEqualTo(4L);
+        documentDto = documentService.findDocument(document, 4L);
+        Assertions.assertThat(documentDto.getDocSn()).isEqualTo(4L);
+        documentDto = documentService.findDocument(document, 5L);
+        Assertions.assertThat(documentDto.getDocSn()).isEqualTo(5L);
     }
 
     @Test

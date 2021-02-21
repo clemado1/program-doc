@@ -63,6 +63,7 @@ public class DocumentController {
                 .version(form.getVersion())
                 .build();
 
+        documentService.saveDocumentData(documentData);
 
         DocumentDto documentDto = new DocumentDto();
         documentDto.of(null, documentData);
@@ -88,20 +89,21 @@ public class DocumentController {
     }
 
     @GetMapping(value = {"/{docId}", "/{docId}/{docSn}"})
-    public DocumentDto view(@PathVariable("docId") long docId
-            , @PathVariable("docSn") Optional<Long> docSn) throws Exception {
+    public DocumentDto view(@PathVariable("docId") long docId,
+                            @PathVariable("docSn") Optional<Long> docSn) {
         Document document = Document.builder().docId(docId).build();
-        DocumentDto documentDto = documentService.findDocument(docId, docSn).orElseThrow();
-        if (documentDto.getDocSn() == null) {
-            documentService.findFirstDocumentData(document).ifPresent(documentData -> {
-                documentDto.setDocSn(documentData.getDocSn());
-                documentDto.setDocStat(documentData.getDocStat());
-                documentDto.setContents(documentData.getContents());
-                documentDto.setVersion(documentData.getVersion());
-            });
-        }
 
-        return documentDto;
+        return docSn.map(sn -> documentService.findDocument(document, sn))
+                .orElse(documentService.findDocument(document));
+    }
+
+    @GetMapping(value = {"/diff/{docId}/{docSn1}", "/diff/{docId}/{docSn1}/{docSn2}"})
+    public DocumentDto diff(@PathVariable("docId") long docId,
+                            @PathVariable("docSn1") long docSn1,
+                            @PathVariable("docSn2") Optional<Long> docSn2) {
+
+
+        return null;
     }
 
     @GetMapping("/list")
