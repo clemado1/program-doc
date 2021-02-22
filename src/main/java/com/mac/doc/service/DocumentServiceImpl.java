@@ -126,13 +126,13 @@ public class DocumentServiceImpl implements DocumentService {
             if (contentsL.isEmpty() && contentsR.isEmpty()) {
                 break;
             }
-            if (contentsL.isEmpty() && !contentsR.isEmpty()) {
+            if (contentsL.isEmpty()) {
                 for (int i = 0; i < contentsR.size(); i++) {
                     resultList.add(added + contentsR.remove(i));
                 }
                 break;
             }
-            if (contentsR.isEmpty() && !contentsL.isEmpty()) {
+            if (contentsR.isEmpty()) {
                 for (int i = 0; i < contentsL.size(); i++) {
                     resultList.add(deleted + contentsL.remove(i));
                 }
@@ -168,12 +168,12 @@ public class DocumentServiceImpl implements DocumentService {
                     cursorL = 0;
                     cursorR = 0;
                     conflict = false;
-                } else if (cursorL == contentsL.size() && cursorR == contentsR.size()) {
-                    for (int i = 0; i < cursorL; i++) {
-                        resultList.add(deleted + contentsL.remove(i));
+                } else if (cursorL + 1 == contentsL.size() && cursorR + 1 == contentsR.size()) {
+                    for (int i = 0; i <= cursorL; i++) {
+                        resultList.add(deleted + contentsL.remove(0));
                     }
-                    for (int i = 0; i < cursorR; i++) {
-                        resultList.add(added + contentsR.remove(i));
+                    for (int i = 0; i <= cursorR; i++) {
+                        resultList.add(added + contentsR.remove(0));
                     }
                     break;
                 } else {
