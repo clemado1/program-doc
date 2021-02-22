@@ -26,6 +26,8 @@ public interface DocumentService {
 
     DocumentDto compareDocumentData(Document document, Long docSn1, Long docSn2);
 
+    String diffContents(String contents1, String contents2);
+
     Optional<DocumentData> findDocumentData(Long docSn);
 
     Optional<DocumentData> findFirstDocumentData(Document document);

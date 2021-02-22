@@ -105,4 +105,12 @@ class DocumentServiceTest {
     @Test
     void testFindDocuments() {
     }
+
+    @Test
+    void diffContents() {
+        String a = "A1\nA2\nB1\nA3\nB2";
+        String b = "A1\nC1\nC2\nA2\nA3\nC3";
+
+        documentService.diffContents(a, b);
+    }
 }
