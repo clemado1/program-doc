@@ -11,12 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.IntStream;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
@@ -110,12 +107,13 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public String diffContents(String contents1, String contents2) {
-        String result = "";
-        ArrayList<String> resultList = new ArrayList<>();
+        ArrayList<String> output = new ArrayList<>();
+
+        LinkedList<String> contentsL = contents1.lines().collect(Collectors.toCollection(LinkedList::new));
+        LinkedList<String> contentsR = contents2.lines().collect(Collectors.toCollection(LinkedList::new));
+
         char added = '+';
         char deleted = '-';
-        ArrayList<String> contentsL = contents1.lines().collect(Collectors.toCollection(ArrayList::new));
-        ArrayList<String> contentsR = contents2.lines().collect(Collectors.toCollection(ArrayList::new));
 
         int cursorL = 0;
         int cursorR = 0;
@@ -123,18 +121,13 @@ public class DocumentServiceImpl implements DocumentService {
         boolean conflict = false;
 
         while (true) {
-            if (contentsL.isEmpty() && contentsR.isEmpty()) {
-                break;
-            }
-            if (contentsL.isEmpty()) {
-                for (int i = 0; i < contentsR.size(); i++) {
-                    resultList.add(added + contentsR.remove(i));
-                }
-                break;
-            }
-            if (contentsR.isEmpty()) {
-                for (int i = 0; i < contentsL.size(); i++) {
-                    resultList.add(deleted + contentsL.remove(i));
+            if (contentsL.isEmpty() || contentsR.isEmpty()) {
+                if (!contentsL.isEmpty()) {
+                   IntStream.range(0, contentsL.size())
+                            .forEach(i -> output.add(deleted + contentsL.removeFirst()));
+                } else if (!contentsR.isEmpty()) {
+                    IntStream.range(0, contentsR.size())
+                            .forEach(i -> output.add(added + contentsR.removeFirst()));
                 }
                 break;
             }
@@ -146,43 +139,41 @@ public class DocumentServiceImpl implements DocumentService {
                 String atL = contentsL.get(0);
                 String atR = contentsR.get(0);
 
-                if (currL.length() == atR.length() && currL.equals(atR)) {
+                if (currL.equals(atR)) {
                     // for startIdx ~ cursorL set - string
-                    for (int i = 0; i < cursorL; i++) {
-                        resultList.add(deleted + contentsL.remove(0));
-                    }
-                    resultList.add(contentsL.remove(0));
-                    contentsR.remove(0);
+                    IntStream.range(0, cursorL)
+                            .forEach(i -> output.add(deleted + contentsL.removeFirst()));
+                    output.add(contentsL.removeFirst());
+                    contentsR.removeFirst();
 
                     cursorL = 0;
                     cursorR = 0;
                     conflict = false;
-                } else if (currR.length() == atL.length() && currR.equals(atL)) {
+                } else if (currR.equals(atL)) {
                     // for startId ~ cursorR set + string
-                    for (int i = 0; i < cursorR; i++) {
-                        resultList.add(added + contentsR.remove(0));
-                    }
-                    resultList.add(contentsR.remove(0));
-                    contentsL.remove(0);
+                    IntStream.range(0, cursorR)
+                            .forEach(i -> output.add(added + contentsR.removeFirst()));
+                    output.add(contentsR.removeFirst());
+                    contentsL.removeFirst();
 
                     cursorL = 0;
                     cursorR = 0;
                     conflict = false;
                 } else if (cursorL + 1 == contentsL.size() && cursorR + 1 == contentsR.size()) {
-                    for (int i = 0; i <= cursorL; i++) {
-                        resultList.add(deleted + contentsL.remove(0));
-                    }
-                    for (int i = 0; i <= cursorR; i++) {
-                        resultList.add(added + contentsR.remove(0));
-                    }
+                    IntStream.range(0, contentsL.size())
+                            .forEach(i -> output.add(deleted + contentsL.removeFirst()));
+
+                    IntStream.range(0, contentsR.size())
+                            .forEach(i -> output.add(added + contentsR.removeFirst()));
+
                     break;
                 } else {
                     cursorL++;
                     cursorR++;
                 }
-            } else if (currL.length() == currR.length() && currL.equals(currR)) {
-                resultList.add(contentsL.remove(cursorL));
-                contentsR.remove(cursorR);
+            } else if (currL.equals(currR)) {
+                output.add(contentsL.removeFirst());
+                contentsR.removeFirst();
             } else {
                 conflict = true;
                 cursorL = cursorL + 1 == contentsL.size() ? cursorL : cursorL + 1;
@@ -190,11 +181,7 @@ public class DocumentServiceImpl implements DocumentService {
             }
         }
 
-        for (int i = 0; i < resultList.size(); i++) {
-            System.out.println(resultList.get(i));
-        }
-
-        return result;
+        return String.join("\n", output);
     }
 
     @Override
