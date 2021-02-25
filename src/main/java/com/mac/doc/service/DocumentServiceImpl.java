@@ -6,10 +6,12 @@ import com.mac.doc.domain.type.DocStat;
 import com.mac.doc.dto.DocumentDto;
 import com.mac.doc.repository.DocumentDataRepository;
 import com.mac.doc.repository.DocumentRepository;
+import com.mac.doc.util.DocumentUtil;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -107,13 +109,13 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public String diffContents(String contents1, String contents2) {
-        ArrayList<String> output = new ArrayList<>();
+        LinkedList<String> output = new LinkedList<>();
 
         LinkedList<String> contentsL = contents1.lines().collect(Collectors.toCollection(LinkedList::new));
         LinkedList<String> contentsR = contents2.lines().collect(Collectors.toCollection(LinkedList::new));
 
-        char added = '+';
-        char deleted = '-';
+        char pls = '+';
+        char mns = '-';
 
         int cursorL = 0;
         int cursorR = 0;
@@ -121,14 +123,12 @@ public class DocumentServiceImpl implements DocumentService {
         boolean conflict = false;
 
         while (true) {
-            if (contentsL.isEmpty() || contentsR.isEmpty()) {
-                if (!contentsL.isEmpty()) {
-                   IntStream.range(0, contentsL.size())
-                            .forEach(i -> output.add(deleted + contentsL.removeFirst()));
-                } else if (!contentsR.isEmpty()) {
-                    IntStream.range(0, contentsR.size())
-                            .forEach(i -> output.add(added + contentsR.removeFirst()));
-                }
+            if (isSourceEmpty(output, contentsL, contentsR)) break;
+
+            if (cursorL == contentsL.size() && cursorR == contentsR.size()) {
+                output.addAll(contentsL.stream().map(s -> mns + s).collect(Collectors.toList()));
+                output.addAll(contentsR.stream().map(s -> pls + s).collect(Collectors.toList()));
+
                 break;
             }
 
@@ -136,52 +136,59 @@ public class DocumentServiceImpl implements DocumentService {
             String currR = contentsR.get(cursorR);
 
             if (conflict) {
-                String atL = contentsL.get(0);
-                String atR = contentsR.get(0);
+                String atL = contentsL.getFirst();
+                String atR = contentsR.getFirst();
 
-                if (currL.equals(atR)) {
+                if (DocumentUtil.equalsWithLength(currL, atR)) {
                     // for startIdx ~ cursorL set - string
-                    IntStream.range(0, cursorL)
-                            .forEach(i -> output.add(deleted + contentsL.removeFirst()));
-                    output.add(contentsL.removeFirst());
+                    acceptTimes(output, contentsL, cursorL, mns);
                     contentsR.removeFirst();
 
                     cursorL = 0;
                     cursorR = 0;
                     conflict = false;
-                } else if (currR.equals(atL)) {
+                } else if (DocumentUtil.equalsWithLength(currR, atL)) {
                     // for startId ~ cursorR set + string
-                    IntStream.range(0, cursorR)
-                            .forEach(i -> output.add(added + contentsR.removeFirst()));
-                    output.add(contentsR.removeFirst());
+                    acceptTimes(output, contentsR, cursorR, pls);
                     contentsL.removeFirst();
 
                     cursorL = 0;
                     cursorR = 0;
                     conflict = false;
-                } else if (cursorL + 1 == contentsL.size() && cursorR + 1 == contentsR.size()) {
-                    IntStream.range(0, contentsL.size())
-                            .forEach(i -> output.add(deleted + contentsL.removeFirst()));
-
-                    IntStream.range(0, contentsR.size())
-                            .forEach(i -> output.add(added + contentsR.removeFirst()));
-
-                    break;
                 } else {
                     cursorL++;
                     cursorR++;
                 }
-            } else if (currL.equals(currR)) {
+            } else if (DocumentUtil.equalsWithLength(currL, currR)) {
                 output.add(contentsL.removeFirst());
                 contentsR.removeFirst();
             } else {
                 conflict = true;
-                cursorL = cursorL + 1 == contentsL.size() ? cursorL : cursorL + 1;
-                cursorR = cursorR + 1 == contentsR.size() ? cursorR : cursorR + 1;
+                cursorL = Math.min(cursorL + 1, contentsL.size());
+                cursorR = Math.min(cursorR + 1, contentsR.size());
             }
         }
 
         return String.join("\n", output);
+    }
+
+    private boolean isSourceEmpty(List<String> output, List<String> l, List<String> r) {
+        if (l.isEmpty() || r.isEmpty()) {
+            if (!l.isEmpty()) {
+                output.addAll(l.stream().map(s -> DocumentUtil.mns + s).collect(Collectors.toList()));
+            } else if (!r.isEmpty()) {
+                output.addAll(r.stream().map(s -> DocumentUtil.pls + s).collect(Collectors.toList()));
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private void acceptTimes(Deque<String> i, Deque<String> d, int times, char prefix) {
+        for (int t = 0; t < times; t++) {
+            i.add(prefix + d.removeFirst());
+        }
+        i.add(d.removeFirst());
     }
 
     @Override
