@@ -110,10 +110,7 @@ class DocumentServiceTest {
     void diffContents() {
         Document document = Document.builder().docId(1L).build();
 
-        DocumentDto dto1 = documentService.findDocument(document, 4L);
-        DocumentDto dto2 = documentService.findDocument(document, 5L);
-
-        System.out.println(documentService.diffContents(dto1.getContents(), dto2.getContents()));
+        System.out.println(documentService.compareDocumentData(document, 4L, 5L));
 
     }
 }

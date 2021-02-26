@@ -3,6 +3,7 @@ package com.mac.doc.service;
 import com.mac.doc.domain.Document;
 import com.mac.doc.domain.DocumentData;
 import com.mac.doc.domain.type.DocStat;
+import com.mac.doc.dto.CompareDto;
 import com.mac.doc.dto.DocumentDto;
 import com.mac.doc.repository.DocumentDataRepository;
 import com.mac.doc.repository.DocumentRepository;
@@ -75,114 +76,47 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public DocumentDto findDocument(Document document) {
-        DocumentDto documentDto = new DocumentDto();
-
-        documentRepository.findById(document.getDocId()).ifPresent(document1 -> {
-            if (document1.getDocumentData() == null) {
-                documentDataRepository.findTopByDocumentOrderByDocSnDesc(document)
-                        .ifPresent(documentData -> documentDto.of(document1, documentData));
-            } else {
-                documentDto.of(document1, document1.getDocumentData());
-            }
-        });
-
-        return documentDto;
+        return documentRepository.findById(document.getDocId())
+                .map(document1 -> {
+                    if (document1.getDocumentData() == null) {
+                        return documentDataRepository.findTopByDocumentOrderByDocSnDesc(document)
+                                .map(documentData -> DocumentDto.of(document1, documentData))
+                                .orElseThrow();
+                    } else {
+                        return DocumentDto.of(document1, document1.getDocumentData());
+                    }
+                })
+                .orElseThrow();
     }
 
     @Override
     public DocumentDto findDocument(Document document, Long docSn) {
-        DocumentDto documentDto = new DocumentDto();
-        documentDataRepository.findByDocSnAndDocument(docSn, document)
-                .ifPresent(documentData -> documentDto.of(documentData.getDocument(), documentData));
-
-        return documentDto;
+        return documentDataRepository.findByDocSnAndDocument(docSn, document)
+                .map(documentData -> DocumentDto.of(documentData.getDocument(), documentData))
+                .orElseThrow();
     }
 
     @Override
-    public DocumentDto compareDocumentData(Document document, Long docSn) {
-        return null;
+    public CompareDto compareDocumentData(Document document, Long docSn) {
+        DocumentData data1 = documentDataRepository.findById(docSn).orElseThrow();
+        DocumentData data2 = documentDataRepository.findByDocumentAndDocSnLessThanOrderByDocSnDesc(document, docSn).orElseThrow();
+
+        return retrieveCompareDto(data1, data2);
     }
 
     @Override
-    public DocumentDto compareDocumentData(Document document, Long docSn1, Long docSn2) {
-        return null;
+    public CompareDto compareDocumentData(Document document, Long docSn1, Long docSn2) {
+        DocumentData data1 = documentDataRepository.findById(docSn1).orElseThrow();
+        DocumentData data2 = documentDataRepository.findById(docSn2).orElseThrow();
+
+        return retrieveCompareDto(data1, data2);
     }
 
-    @Override
-    public String diffContents(String contents1, String contents2) {
-        LinkedList<String> output = new LinkedList<>();
+    private CompareDto retrieveCompareDto(DocumentData data1, DocumentData data2) {
+        DocumentDto docDto = DocumentDto.of(data1.getDocument(), null);
+        docDto.setContents(DocumentUtil.diffContents(data1.getContents(), data2.getContents()));
 
-        LinkedList<String> contentsL = contents1.lines().collect(Collectors.toCollection(LinkedList::new));
-        LinkedList<String> contentsR = contents2.lines().collect(Collectors.toCollection(LinkedList::new));
-
-        int cursorL = 0;
-        int cursorR = 0;
-
-        boolean conflict = false;
-
-        while (true) {
-            if (contentsL.isEmpty() || contentsR.isEmpty()) {
-                output.addAll(contentsL.stream().map(s -> DocumentUtil.MINUS + s).collect(Collectors.toList()));
-                output.addAll(contentsR.stream().map(s -> DocumentUtil.PLUS + s).collect(Collectors.toList()));
-
-                break;
-            }
-
-            cursorL = Math.min(cursorL, contentsL.size() - 1);
-            cursorR = Math.min(cursorR, contentsR.size() - 1);
-
-            String currL = contentsL.get(cursorL);
-            String currR = contentsR.get(cursorR);
-
-            if (conflict) {
-                String atL = contentsL.getFirst();
-                String atR = contentsR.getFirst();
-
-                if (DocumentUtil.equalsWithLength(currL, atR)) {
-                    // for startIdx ~ cursorL set - string
-                    acceptTimes(output, contentsL, cursorL, DocumentUtil.MINUS);
-                    contentsR.removeFirst();
-
-                    cursorL = 0;
-                    cursorR = 0;
-                    conflict = false;
-                } else if (DocumentUtil.equalsWithLength(currR, atL)) {
-                    // for startId ~ cursorR set + string
-                    acceptTimes(output, contentsR, cursorR, DocumentUtil.PLUS);
-                    contentsL.removeFirst();
-
-                    cursorL = 0;
-                    cursorR = 0;
-                    conflict = false;
-                } else if (cursorL == contentsL.size() - 1 && cursorR == contentsR.size() - 1) {
-                    output.add(DocumentUtil.MINUS + contentsL.removeFirst());
-                    output.add(DocumentUtil.PLUS + contentsR.removeFirst());
-
-                    cursorL = 0;
-                    cursorR = 0;
-                    conflict = false;
-                } else {
-                    cursorL++;
-                    cursorR++;
-                }
-            } else if (DocumentUtil.equalsWithLength(currL, currR)) {
-                output.add(contentsL.removeFirst());
-                contentsR.removeFirst();
-            } else {
-                conflict = true;
-                cursorL++;
-                cursorR++;
-            }
-        }
-
-        return String.join("\n", output);
-    }
-
-    private void acceptTimes(Deque<String> i, Deque<String> d, int times, char prefix) {
-        for (int t = 0; t < times; t++) {
-            i.add(prefix + d.removeFirst());
-        }
-        i.add(d.removeFirst());
+        return new CompareDto(docDto, DocumentDto.of(null, data1), DocumentDto.of(null, data2));
     }
 
     @Override

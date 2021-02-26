@@ -42,18 +42,20 @@ public class FunctionDto {
         this.holdUserNm = holdUserNm;
     }
 
-    public void of(Function function) {
-        this.functionCd = function.getFunctionCd();
-        this.functionNm = function.getFunctionNm();
-        this.functionType = function.getFunctionType();
-        this.holdUserId = function.getHoldUser().getUserId();
-        this.holdUserNm = function.getHoldUser().getUserNm();
+    public static FunctionDto of(Function function) {
+        FunctionDto functionDto = new FunctionDto();
 
-        this.documents = function.getDocuments().stream()
+        functionDto.functionCd = function.getFunctionCd();
+        functionDto.functionNm = function.getFunctionNm();
+        functionDto.functionType = function.getFunctionType();
+        functionDto.holdUserId = function.getHoldUser().getUserId();
+        functionDto.holdUserNm = function.getHoldUser().getUserNm();
+
+        functionDto.documents = function.getDocuments().stream()
                 .map(document -> {
-                    DocumentDto documentDto = new DocumentDto();
-                    documentDto.of(document, null);
-                    return documentDto;
+                    return DocumentDto.of(document, null);
                 }).collect(Collectors.toSet());
+
+        return functionDto;
     }
 }

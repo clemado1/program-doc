@@ -2,6 +2,7 @@ package com.mac.doc.service;
 
 import com.mac.doc.domain.Document;
 import com.mac.doc.domain.DocumentData;
+import com.mac.doc.dto.CompareDto;
 import com.mac.doc.dto.DocumentDto;
 
 import java.util.List;
@@ -22,11 +23,9 @@ public interface DocumentService {
 
     DocumentDto findDocument(Document document, Long docSn);
 
-    DocumentDto compareDocumentData(Document document, Long docSn);
+    CompareDto compareDocumentData(Document document, Long docSn);
 
-    DocumentDto compareDocumentData(Document document, Long docSn1, Long docSn2);
-
-    String diffContents(String contents1, String contents2);
+    CompareDto compareDocumentData(Document document, Long docSn1, Long docSn2);
 
     Optional<DocumentData> findDocumentData(Long docSn);
 

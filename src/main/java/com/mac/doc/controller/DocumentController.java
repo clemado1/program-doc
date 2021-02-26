@@ -4,6 +4,7 @@ import com.mac.doc.domain.Document;
 import com.mac.doc.domain.DocumentData;
 import com.mac.doc.domain.Function;
 import com.mac.doc.domain.type.DocStat;
+import com.mac.doc.dto.CompareDto;
 import com.mac.doc.dto.DocumentDto;
 import com.mac.doc.dto.FunctionDto;
 import com.mac.doc.service.DocumentService;
@@ -47,10 +48,7 @@ public class DocumentController {
 
         documentService.saveDocument(document, documentData);
 
-        DocumentDto documentDto = new DocumentDto();
-        documentDto.of(document, documentData);
-
-        return documentDto;
+        return DocumentDto.of(document, documentData);
     }
 
     @PostMapping("/save")
@@ -65,10 +63,7 @@ public class DocumentController {
 
         documentService.saveDocumentData(documentData);
 
-        DocumentDto documentDto = new DocumentDto();
-        documentDto.of(null, documentData);
-
-        return documentDto;
+        return DocumentDto.of(null, documentData);
     }
 
     @PostMapping("/publish")
@@ -98,12 +93,14 @@ public class DocumentController {
     }
 
     @GetMapping(value = {"/diff/{docId}/{docSn1}", "/diff/{docId}/{docSn1}/{docSn2}"})
-    public DocumentDto diff(@PathVariable("docId") long docId,
-                            @PathVariable("docSn1") long docSn1,
-                            @PathVariable("docSn2") Optional<Long> docSn2) {
+    public CompareDto diff(@PathVariable("docId") long docId,
+                           @PathVariable("docSn1") long docSn1,
+                           @PathVariable("docSn2") Optional<Long> docSn2) {
+        Document document = Document.builder().docId(docId).build();
 
-
-        return null;
+        return docSn2
+                .map(s-> documentService.compareDocumentData(document, docSn1, s))
+                .orElse(documentService.compareDocumentData(document, docSn1));
     }
 
     @GetMapping("/list")

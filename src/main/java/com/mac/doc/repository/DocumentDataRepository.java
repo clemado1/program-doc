@@ -12,4 +12,8 @@ public interface DocumentDataRepository extends JpaRepository<DocumentData, Long
     Optional<DocumentData> findTopByDocumentOrderByDocSnDesc(Document document);
 
     Optional<DocumentData> findByDocSnAndDocument(Long docSn, Document document);
+
+    Optional<DocumentData> findByDocumentAndDocSnLessThanOrderByDocSnDesc(Document document, Long docSn);
+
+
 }
