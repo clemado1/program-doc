@@ -108,9 +108,12 @@ class DocumentServiceTest {
 
     @Test
     void diffContents() {
-        String a = "A1\nA2\nB1\nA3\nB2";
-        String b = "A1\nC1\nC2\nA2\nA3\nC3";
+        Document document = Document.builder().docId(1L).build();
 
-        documentService.diffContents(a, b);
+        DocumentDto dto1 = documentService.findDocument(document, 4L);
+        DocumentDto dto2 = documentService.findDocument(document, 5L);
+
+        System.out.println(documentService.diffContents(dto1.getContents(), dto2.getContents()));
+
     }
 }

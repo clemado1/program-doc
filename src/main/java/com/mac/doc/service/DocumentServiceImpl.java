@@ -11,11 +11,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
@@ -114,23 +115,21 @@ public class DocumentServiceImpl implements DocumentService {
         LinkedList<String> contentsL = contents1.lines().collect(Collectors.toCollection(LinkedList::new));
         LinkedList<String> contentsR = contents2.lines().collect(Collectors.toCollection(LinkedList::new));
 
-        char pls = '+';
-        char mns = '-';
-
         int cursorL = 0;
         int cursorR = 0;
 
         boolean conflict = false;
 
         while (true) {
-            if (isSourceEmpty(output, contentsL, contentsR)) break;
-
-            if (cursorL == contentsL.size() && cursorR == contentsR.size()) {
-                output.addAll(contentsL.stream().map(s -> mns + s).collect(Collectors.toList()));
-                output.addAll(contentsR.stream().map(s -> pls + s).collect(Collectors.toList()));
+            if (contentsL.isEmpty() || contentsR.isEmpty()) {
+                output.addAll(contentsL.stream().map(s -> DocumentUtil.MINUS + s).collect(Collectors.toList()));
+                output.addAll(contentsR.stream().map(s -> DocumentUtil.PLUS + s).collect(Collectors.toList()));
 
                 break;
             }
+
+            cursorL = Math.min(cursorL, contentsL.size() - 1);
+            cursorR = Math.min(cursorR, contentsR.size() - 1);
 
             String currL = contentsL.get(cursorL);
             String currR = contentsR.get(cursorR);
@@ -141,7 +140,7 @@ public class DocumentServiceImpl implements DocumentService {
 
                 if (DocumentUtil.equalsWithLength(currL, atR)) {
                     // for startIdx ~ cursorL set - string
-                    acceptTimes(output, contentsL, cursorL, mns);
+                    acceptTimes(output, contentsL, cursorL, DocumentUtil.MINUS);
                     contentsR.removeFirst();
 
                     cursorL = 0;
@@ -149,8 +148,15 @@ public class DocumentServiceImpl implements DocumentService {
                     conflict = false;
                 } else if (DocumentUtil.equalsWithLength(currR, atL)) {
                     // for startId ~ cursorR set + string
-                    acceptTimes(output, contentsR, cursorR, pls);
+                    acceptTimes(output, contentsR, cursorR, DocumentUtil.PLUS);
                     contentsL.removeFirst();
+
+                    cursorL = 0;
+                    cursorR = 0;
+                    conflict = false;
+                } else if (cursorL == contentsL.size() - 1 && cursorR == contentsR.size() - 1) {
+                    output.add(DocumentUtil.MINUS + contentsL.removeFirst());
+                    output.add(DocumentUtil.PLUS + contentsR.removeFirst());
 
                     cursorL = 0;
                     cursorR = 0;
@@ -164,24 +170,12 @@ public class DocumentServiceImpl implements DocumentService {
                 contentsR.removeFirst();
             } else {
                 conflict = true;
-                cursorL = Math.min(cursorL + 1, contentsL.size());
-                cursorR = Math.min(cursorR + 1, contentsR.size());
+                cursorL++;
+                cursorR++;
             }
         }
 
         return String.join("\n", output);
-    }
-
-    private boolean isSourceEmpty(List<String> output, List<String> l, List<String> r) {
-        if (l.isEmpty() || r.isEmpty()) {
-            if (!l.isEmpty()) {
-                output.addAll(l.stream().map(s -> DocumentUtil.mns + s).collect(Collectors.toList()));
-            } else if (!r.isEmpty()) {
-                output.addAll(r.stream().map(s -> DocumentUtil.pls + s).collect(Collectors.toList()));
-            }
-            return true;
-        }
-        return false;
     }
 
     private void acceptTimes(Deque<String> i, Deque<String> d, int times, char prefix) {
