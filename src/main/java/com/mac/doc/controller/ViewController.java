@@ -39,6 +39,19 @@ public class ViewController {
         return "/doc/viewForm";
     }
 
+    @GetMapping(value = {"/doc/diff/{docId}/{docSn1}", "/doc/diff/{docId}/{docSn1}/{docSn2}"})
+    public String diff(
+            @PathVariable("docId") long docId,
+            @PathVariable("docSn1") Long docSn1,
+            @PathVariable(value = "docSn2", required = false) Long docSn2,
+            Model model) {
+        model.addAttribute("docId", docId);
+        model.addAttribute("docSn1", docSn1);
+        model.addAttribute("docSn2", docSn2);
+
+        return "/doc/diffForm";
+    }
+
     @GetMapping("/doc/list")
     public String list() {
 

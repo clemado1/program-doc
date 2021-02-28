@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/doc_common :: docHead"><title></title></head>
+<body>
+<div th:replace="fragments/doc_common :: docBody"></div>
+<input th:id="docId" th:name="docId" th:value="${docId}" type="hidden">
+<input th:id="docSn1" th:name="docSn1" th:value="${docSn1}" type="hidden">
+<input th:id="docSn2" th:name="docSn2" th:value="${docSn2}" type="hidden">
+<h1 th:id="title" th:name="title"></h1>
+<div id="toc"></div>
+<div id="viewer">
+    <strong>Loading...</strong>
+</div>
+<script>
+    let docId = document.getElementById("docId").value;
+    let docSn1 = document.getElementById("docSn1").value;
+    let docSn2 = document.getElementById("docSn2").value;
+
+    let url = docSn2 && !isNaN(docSn2) ?
+        `/api/doc/diff/${docId}/${docSn1}/${docSn2}`
+        : `/api/doc/diff/${docId}/${docSn1}`
+
+    fetch(url, {
+        method: 'get',
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem("jwt"),
+        }
+    }).then(res => res.json())
+        .then(json => {
+            console.log(json);
+            document.getElementById("title").innerText = json.document.title;
+            document.getElementById("docSn1").value = json.firstDocumentData.docSn;
+            document.getElementById("docSn2").value = json.secondDocumentData.docSn;
+
+            const Editor = toastui.Editor;
+            const codeSyntaxHighlight = Editor.plugin.codeSyntaxHighlight;
+            const viewer = Editor.factory({
+                el: document.getElementById('viewer'),
+                viewer: true,
+                initialValue: json.document.contents,
+                plugins: [codeSyntaxHighlight]
+            });
+
+            generateLinkMarkUp();
+        });
+</script>
+</body>
+</html>

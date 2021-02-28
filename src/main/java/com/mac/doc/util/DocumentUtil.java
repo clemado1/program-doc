@@ -11,6 +11,8 @@ public class DocumentUtil {
     private static final char PLUS = '+';
     private static final char MINUS = '-';
     private static final char SPACE = ' ';
+    private static final String HEADER = "```diff\n";
+    private static final String FOOTER = "\n```";
 
     public static boolean equalsWithLength(String s1, String s2) {
         return s1.length() == s2.length() && s1.equals(s2);
@@ -82,7 +84,7 @@ public class DocumentUtil {
             }
         }
 
-        return String.join("\n", output);
+        return HEADER + String.join("\n", output) + FOOTER;
     }
 
     private static void acceptTimes(Deque<String> i, Deque<String> d, int times, char prefix) {
