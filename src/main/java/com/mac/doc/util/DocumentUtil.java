@@ -10,7 +10,6 @@ public class DocumentUtil {
 
     private static final char PLUS = '+';
     private static final char MINUS = '-';
-    private static final char SPACE = ' ';
     private static final String HEADER = "```diff\n";
     private static final String FOOTER = "\n```";
 
@@ -29,10 +28,12 @@ public class DocumentUtil {
 
         boolean conflict = false;
 
+
+
         while (true) {
             if (contentsL.isEmpty() || contentsR.isEmpty()) {
-                output.addAll(contentsL.stream().map(s -> MINUS + SPACE + s).collect(Collectors.toList()));
-                output.addAll(contentsR.stream().map(s -> PLUS + SPACE + s).collect(Collectors.toList()));
+                output.addAll(contentsL.stream().map(s -> String.valueOf(MINUS).concat(" ").concat(s)).collect(Collectors.toList()));
+                output.addAll(contentsR.stream().map(s -> String.valueOf(PLUS).concat(" ").concat(s)).collect(Collectors.toList()));
 
                 break;
             }
@@ -64,8 +65,8 @@ public class DocumentUtil {
                     cursorR = 0;
                     conflict = false;
                 } else if (cursorL == contentsL.size() - 1 && cursorR == contentsR.size() - 1) {
-                    output.add(MINUS + SPACE + contentsL.removeFirst());
-                    output.add(PLUS + SPACE + contentsR.removeFirst());
+                    output.add(String.valueOf(MINUS).concat(" ").concat(contentsL.removeFirst()));
+                    output.add(String.valueOf(PLUS).concat(" ").concat(contentsR.removeFirst()));
 
                     cursorL = 0;
                     cursorR = 0;
@@ -89,7 +90,7 @@ public class DocumentUtil {
 
     private static void acceptTimes(Deque<String> i, Deque<String> d, int times, char prefix) {
         for (int t = 0; t < times; t++) {
-            i.add(prefix + SPACE + d.removeFirst());
+            i.add(String.valueOf(prefix).concat(" ").concat(d.removeFirst()));
         }
         i.add(d.removeFirst());
     }

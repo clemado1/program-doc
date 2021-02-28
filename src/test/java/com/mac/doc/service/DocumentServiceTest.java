@@ -2,6 +2,7 @@ package com.mac.doc.service;
 
 import com.mac.doc.domain.*;
 import com.mac.doc.domain.type.DocStat;
+import com.mac.doc.dto.CompareDto;
 import com.mac.doc.dto.DocumentDto;
 import com.mac.doc.repository.DocumentRepository;
 import com.mac.doc.repository.LabelRepository;
@@ -109,8 +110,11 @@ class DocumentServiceTest {
     @Test
     void diffContents() {
         Document document = Document.builder().docId(1L).build();
+        CompareDto dto = documentService.compareDocumentData(document, 4L, 5L);
 
-        System.out.println(documentService.compareDocumentData(document, 4L, 5L));
+
+
+        System.out.println(dto.getDocument().getContents());
 
     }
 }

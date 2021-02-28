@@ -99,9 +99,16 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public CompareDto compareDocumentData(Document document, Long docSn) {
         DocumentData data1 = documentDataRepository.findById(docSn).orElseThrow();
-        DocumentData data2 = documentDataRepository.findByDocumentAndDocSnLessThanOrderByDocSnDesc(document, docSn).orElseThrow();
+        Optional<DocumentData> data2 = documentDataRepository.findByDocumentAndDocSnLessThanOrderByDocSnDesc(document, docSn);
 
-        return retrieveCompareDto(data1, data2);
+        if (data2.isPresent()) {
+            return retrieveCompareDto(data1, data2.get());
+        } else {
+            DocumentDto docDto = DocumentDto.of(data1.getDocument(), null);
+            docDto.setContents(data1.getContents());
+
+            return new CompareDto(docDto, DocumentDto.of(null, data1), null);
+        }
     }
 
     @Override
