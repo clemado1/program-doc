@@ -20,14 +20,6 @@ public class FunctionDto {
     private String holdUserId;
     private String holdUserNm;
 
-    public void setFunctionType(String functionType) {
-        this.functionType = FunctionType.valueOf(functionType.toUpperCase());
-    }
-
-    public void setFunctionType(FunctionType functionType) {
-        this.functionType = functionType;
-    }
-
     public FunctionDto() {
 
     }
@@ -57,5 +49,13 @@ public class FunctionDto {
                 }).collect(Collectors.toSet());
 
         return functionDto;
+    }
+
+    public void setFunctionType(String functionType) {
+        this.functionType = FunctionType.valueOf(functionType.toUpperCase());
+    }
+
+    public void setFunctionType(FunctionType functionType) {
+        this.functionType = functionType;
     }
 }

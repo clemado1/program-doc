@@ -5,7 +5,7 @@
     <title>List</title>
 </head>
 <script>
-    fetch("/api/fnc/list",{
+    fetch("/api/fnc/list", {
         method: 'get',
         headers: {
             'content-type': 'application/json',
@@ -44,9 +44,9 @@
 <body>
 <div class="container">
     <div id="new-function">
-        <input type="text" id="functionCd" name="functionCd">
-        <input type="text" id="functionNm" name="functionNm">
-        <input type="text" id="functionType" name="functionType">
+        <input id="functionCd" name="functionCd" type="text">
+        <input id="functionNm" name="functionNm" type="text">
+        <input id="functionType" name="functionType" type="text">
         <button id="form-submit" th:text="Create" type="submit"></button>
     </div>
     <ul id="function-list">
@@ -61,10 +61,10 @@
                 'content-type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem("jwt"),
             },
-            body : JSON.stringify({
-                functionCd : document.getElementById("functionCd").value,
-                functionNm : document.getElementById("functionNm").value,
-                functionType : document.getElementById("functionType").value,
+            body: JSON.stringify({
+                functionCd: document.getElementById("functionCd").value,
+                functionNm: document.getElementById("functionNm").value,
+                functionType: document.getElementById("functionType").value,
             })
         }).then(res => res.json())
             .then(f => {

@@ -3,50 +3,50 @@
 <head th:replace="fragments/doc_common :: docHead"><title></title></head>
 <body>
 <div th:replace="fragments/doc_common :: docBody"></div>
-    <input id="docId" name="docId" th:value="${docId}" type="hidden"/>
-    <input id="docSn" name="docSn" th:value="${docSn}" type="hidden"/>
-    <input id="functionCd" name="functionCd" th:value="${functionCd}" type="hidden"/>
-    <h1>writeform</h1>
-    <input id="title" name="title" placeholder="title" type="text"/>
-    version: <input id="version" name="version" step="0.01" type="number" value="1.00"/>
-    <div id="editor"></div>
-    <script>
-        const Editor = toastui.Editor;
-        const codeSyntaxHighlight = Editor.plugin.codeSyntaxHighlight;
-        const editor = new Editor({
-            el: document.querySelector('#editor'),
-            height: '600px',
-            initialEditType: 'markdown',
-            previewStyle: 'vertical',
-            plugins: [codeSyntaxHighlight]
-        });
+<input id="docId" name="docId" th:value="${docId}" type="hidden"/>
+<input id="docSn" name="docSn" th:value="${docSn}" type="hidden"/>
+<input id="functionCd" name="functionCd" th:value="${functionCd}" type="hidden"/>
+<h1>writeform</h1>
+<input id="title" name="title" placeholder="title" type="text"/>
+version: <input id="version" name="version" step="0.01" type="number" value="1.00"/>
+<div id="editor"></div>
+<script>
+    const Editor = toastui.Editor;
+    const codeSyntaxHighlight = Editor.plugin.codeSyntaxHighlight;
+    const editor = new Editor({
+        el: document.querySelector('#editor'),
+        height: '600px',
+        initialEditType: 'markdown',
+        previewStyle: 'vertical',
+        plugins: [codeSyntaxHighlight]
+    });
 
-        let docId = document.getElementById("docId").value;
-        if (docId && !isNaN(docId)) {
+    let docId = document.getElementById("docId").value;
+    if (docId && !isNaN(docId)) {
 
-            let url = document.getElementById("docSn").value
-                ? `/api/doc/${docId}/${document.getElementById("docSn").value}`
-                : `/api/doc/${docId}`;
+        let url = document.getElementById("docSn").value
+            ? `/api/doc/${docId}/${document.getElementById("docSn").value}`
+            : `/api/doc/${docId}`;
 
-            fetch(url, {
-                method: 'get',
-                headers: {
-                    'content-type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem("jwt"),
-                }
-            }).then(res => res.json())
-                .then(doc => {
-                    document.getElementById("title").value = doc.title;
-                    document.getElementById("version").value = doc.version;
-                    editor.setMarkdown(doc.contents, false);
-                });
-        }
-    </script>
-    <select id="docStat" name="docStat">
-        <option value="tempsave">TempSave</option>
-        <option value="published">Publish</option>
-    </select>
-    <button id="form-submit" th:text="Save" type="submit"></button>
+        fetch(url, {
+            method: 'get',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem("jwt"),
+            }
+        }).then(res => res.json())
+            .then(doc => {
+                document.getElementById("title").value = doc.title;
+                document.getElementById("version").value = doc.version;
+                editor.setMarkdown(doc.contents, false);
+            });
+    }
+</script>
+<select id="docStat" name="docStat">
+    <option value="tempsave">TempSave</option>
+    <option value="published">Publish</option>
+</select>
+<button id="form-submit" th:text="Save" type="submit"></button>
 <script>
     const saveBtn = document.querySelector("#form-submit");
     saveBtn.addEventListener('click', function () {
@@ -60,14 +60,14 @@
                 'content-type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem("jwt"),
             },
-            body : JSON.stringify({
-                docId : document.getElementById("docId").value,
-                docSn : document.getElementById("docSn").value,
-                functionCd : document.getElementById("functionCd").value,
-                title : document.getElementById("title").value,
-                docStat : document.getElementById("docStat").value,
-                version : document.getElementById("version").value,
-                contents : editor.getMarkdown(),
+            body: JSON.stringify({
+                docId: document.getElementById("docId").value,
+                docSn: document.getElementById("docSn").value,
+                functionCd: document.getElementById("functionCd").value,
+                title: document.getElementById("title").value,
+                docStat: document.getElementById("docStat").value,
+                version: document.getElementById("version").value,
+                contents: editor.getMarkdown(),
             })
         }).then(res => res.json())
             .then(doc => {

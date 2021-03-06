@@ -18,20 +18,16 @@ import java.util.Set;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class, property = "functionCd")
 public class Function extends Base {
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "function")
+    private final Set<Document> documents = new HashSet<>();
     @Id
     @Column(name = "function_cd")
     private String functionCd;
-
     private String functionNm;
-
     private FunctionType functionType;
-
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "hold_user_id", referencedColumnName = "user_id")
     private User holdUser;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "function")
-    private final Set<Document> documents = new HashSet<>();
 
     @Builder
     public Function(String functionCd, String functionNm, FunctionType functionType) {

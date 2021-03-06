@@ -3,129 +3,131 @@
 <head th:replace="fragments/doc_common :: docHead"><title></title></head>
 <body>
 <div th:replace="fragments/doc_common :: docBody"></div>
-    <input th:id="docId" th:name="docId" th:value="${docId}" type="hidden">
-    <input th:id="docSn" th:name="docSn" th:value="${docSn}" type="hidden">
-    <h1 th:id="title" th:name="title"></h1>
-    <span th:id="docStat" th:name="docStat"></span>
-    <div id="toc"></div>
-    <button id="write-doc" th:text="New"></button>
-    <button id="modify-doc" th:text="Modify"></button>
-    <div id="viewer">
-        <strong>Loading...</strong>
-    </div>
-    <button id="publish-doc" th:text="Publish"></button>
-    <script>
-        let docId = document.getElementById("docId").value;
+<input th:id="docId" th:name="docId" th:value="${docId}" type="hidden">
+<input th:id="docSn" th:name="docSn" th:value="${docSn}" type="hidden">
+<h1 th:id="title" th:name="title"></h1>
+<span th:id="docStat" th:name="docStat"></span>
+<div id="toc"></div>
+<button id="write-doc" th:text="New"></button>
+<button id="modify-doc" th:text="Modify"></button>
+<div id="viewer">
+    <strong>Loading...</strong>
+</div>
+<button id="publish-doc" th:text="Publish"></button>
+<script>
+    let docId = document.getElementById("docId").value;
+    let docSn = document.getElementById("docSn").value;
+
+    const newBtn = document.getElementById("write-doc");
+    newBtn.addEventListener('click', function () {
         let docSn = document.getElementById("docSn").value;
+        location.href = `/doc/write/${docId}`;
+    });
 
-        const newBtn = document.getElementById("write-doc");
-        newBtn.addEventListener('click', function () {
-            let docSn = document.getElementById("docSn").value;
-            location.href = `/doc/write/${docId}`;
-        });
+    const modBtn = document.getElementById("modify-doc");
+    modBtn.addEventListener('click', function () {
+        let docSn = document.getElementById("docSn").value;
+        location.href = `/doc/write/${docId}/${docSn}`;
+    });
 
-        const modBtn = document.getElementById("modify-doc");
-        modBtn.addEventListener('click', function () {
-            let docSn = document.getElementById("docSn").value;
-            location.href = `/doc/write/${docId}/${docSn}`;
-        });
-
-        const pubBtn = document.getElementById("publish-doc");
-        pubBtn.addEventListener('click', function () {
-            fetch("/api/doc/publish", {
-                method: 'post',
-                headers: {
-                    'content-type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem("jwt"),
-                },
-                body : JSON.stringify({
-                    docId : docId,
-                    docSn : docSn,
-                })
-            }).then(res => res.json())
-                .then(docId => {
-
-                });
-        });
-
-        let url = docSn && !isNaN(docSn) ?
-            `/api/doc/${docId}/${docSn}`
-            : `/api/doc/${docId}`
-
-        fetch(url, {
-            method: 'get',
+    const pubBtn = document.getElementById("publish-doc");
+    pubBtn.addEventListener('click', function () {
+        fetch("/api/doc/publish", {
+            method: 'post',
             headers: {
                 'content-type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem("jwt"),
-            }
+            },
+            body: JSON.stringify({
+                docId: docId,
+                docSn: docSn,
+            })
         }).then(res => res.json())
-            .then(json => {
-                console.log(json);
-                document.getElementById("title").innerText = json.title;
-                document.getElementById("docStat").innerText = json.docStat;
-                document.getElementById("docSn").value = json.docSn;
+            .then(docId => {
 
-                const Editor = toastui.Editor;
-                const codeSyntaxHighlight = Editor.plugin.codeSyntaxHighlight;
-                const viewer = Editor.factory({
-                    el: document.getElementById('viewer'),
-                    viewer: true,
-                    initialValue: json.contents,
-                    plugins: [codeSyntaxHighlight],
-                    customHTMLRenderer: {
-                        heading(node, context) {
-                            const tagName = `h${node.level}`;
-                            let id = node.firstChild && node.firstChild.literal
-                                ? node.firstChild.literal
-                                : ""
+            });
+    });
 
-                            id = id.replace(/[^\w\s(가-힣)]/gi, " ")
-                                .trim()
-                                .toLocaleLowerCase()
-                                .replace(/ +/g, " ")
-                                .split(" ").join("-");
+    let url = docSn && !isNaN(docSn) ?
+        `/api/doc/${docId}/${docSn}`
+        : `/api/doc/${docId}`
 
-                            if (context.entering) {
-                                return {
-                                    type: "openTag",
-                                    tagName,
-                                    attributes: {
-                                        id: id
-                                    }
-                                };
-                            }
+    fetch(url, {
+        method: 'get',
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem("jwt"),
+        }
+    }).then(res => res.json())
+        .then(json => {
+            console.log(json);
+            document.getElementById("title").innerText = json.title;
+            document.getElementById("docStat").innerText = json.docStat;
+            document.getElementById("docSn").value = json.docSn;
 
-                            return { type: "closeTag", tagName,
+            const Editor = toastui.Editor;
+            const codeSyntaxHighlight = Editor.plugin.codeSyntaxHighlight;
+            const viewer = Editor.factory({
+                el: document.getElementById('viewer'),
+                viewer: true,
+                initialValue: json.contents,
+                plugins: [codeSyntaxHighlight],
+                customHTMLRenderer: {
+                    heading(node, context) {
+                        const tagName = `h${node.level}`;
+                        let id = node.firstChild && node.firstChild.literal
+                            ? node.firstChild.literal
+                            : ""
+
+                        id = id.replace(/[^\w\s(가-힣)]/gi, " ")
+                            .trim()
+                            .toLocaleLowerCase()
+                            .replace(/ +/g, " ")
+                            .split(" ").join("-");
+
+                        if (context.entering) {
+                            return {
+                                type: "openTag",
+                                tagName,
                                 attributes: {
                                     id: id
                                 }
                             };
-                        },
-                    }
-                });
+                        }
 
-                generateLinkMarkUp();
-            });
-        function generateLinkMarkUp() {
-            const headings = [...document.getElementById("viewer").querySelectorAll("h1,h2,h3,h4,h5")];
-            const parsedHeadings = headings.map(function (heading) {
-                return {
-                    title: heading.innerText,
-                    depth: heading.nodeName.replace(/\D/g,''),
-                    id: heading.getAttribute('id')
+                        return {
+                            type: "closeTag", tagName,
+                            attributes: {
+                                id: id
+                            }
+                        };
+                    },
                 }
             });
 
-            const htmlMarkup = parsedHeadings.map(function (h) {
-                return `
+            generateLinkMarkUp();
+        });
+
+    function generateLinkMarkUp() {
+        const headings = [...document.getElementById("viewer").querySelectorAll("h1,h2,h3,h4,h5")];
+        const parsedHeadings = headings.map(function (heading) {
+            return {
+                title: heading.innerText,
+                depth: heading.nodeName.replace(/\D/g, ''),
+                id: heading.getAttribute('id')
+            }
+        });
+
+        const htmlMarkup = parsedHeadings.map(function (h) {
+            return `
                 <li class="${h.depth > 1 ? 'pl-4' : ''}">
                     <a href="#${h.id}">${h.title}</a>
                 </li>
                 `
-            });
+        });
 
-            document.getElementById("toc").innerHTML = `<ul>${htmlMarkup.join('')}</ul>`;
-        }
-    </script>
+        document.getElementById("toc").innerHTML = `<ul>${htmlMarkup.join('')}</ul>`;
+    }
+</script>
 </body>
 </html>

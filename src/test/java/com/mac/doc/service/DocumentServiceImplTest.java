@@ -2,8 +2,6 @@ package com.mac.doc.service;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class DocumentServiceImplTest {
 
     @Test

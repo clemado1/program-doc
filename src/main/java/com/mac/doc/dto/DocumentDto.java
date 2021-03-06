@@ -25,14 +25,8 @@ public class DocumentDto {
     private String modiUserId;
     private String modiUserNm;
 
-    public void setDocStat(String docStat) {
-        this.docStat = DocStat.valueOf(docStat.toUpperCase());
+    public DocumentDto() {
     }
-    public void setDocStat(DocStat docStat) {
-        this.docStat = docStat;
-    }
-
-    public DocumentDto() {}
 
     @Builder
     public DocumentDto(Long docId, Long docSn, String title, DocStat docStat, String contents, Double version, String functionCd, String functionNm, String holdUserId, String holdUserNm, String rgsnUserId, String rgsnUserNm, String modiUserId, String modiUserNm) {
@@ -74,5 +68,13 @@ public class DocumentDto {
         }
 
         return documentDto;
+    }
+
+    public void setDocStat(String docStat) {
+        this.docStat = DocStat.valueOf(docStat.toUpperCase());
+    }
+
+    public void setDocStat(DocStat docStat) {
+        this.docStat = docStat;
     }
 }

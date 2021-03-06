@@ -6,12 +6,13 @@ import java.util.stream.Collectors;
 
 public class DocumentUtil {
 
-    private DocumentUtil() { throw new IllegalStateException("Utility class"); }
-
     private static final char PLUS = '+';
     private static final char MINUS = '-';
     private static final String HEADER = "```diff\n";
     private static final String FOOTER = "\n```";
+    private DocumentUtil() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static boolean equalsWithLength(String s1, String s2) {
         return s1.length() == s2.length() && s1.equals(s2);
@@ -27,7 +28,6 @@ public class DocumentUtil {
         int cursorR = 0;
 
         boolean conflict = false;
-
 
 
         while (true) {

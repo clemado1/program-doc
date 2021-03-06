@@ -99,7 +99,7 @@ public class DocumentController {
         Document document = Document.builder().docId(docId).build();
 
         return docSn2
-                .map(s-> documentService.compareDocumentData(document, docSn1, s))
+                .map(s -> documentService.compareDocumentData(document, docSn1, s))
                 .orElse(documentService.compareDocumentData(document, docSn1));
     }
 

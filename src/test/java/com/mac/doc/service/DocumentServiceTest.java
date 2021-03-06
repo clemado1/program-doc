@@ -1,13 +1,16 @@
 package com.mac.doc.service;
 
-import com.mac.doc.domain.*;
+import com.mac.doc.domain.Document;
+import com.mac.doc.domain.DocumentData;
+import com.mac.doc.domain.Function;
+import com.mac.doc.domain.Label;
 import com.mac.doc.domain.type.DocStat;
 import com.mac.doc.dto.CompareDto;
 import com.mac.doc.dto.DocumentDto;
 import com.mac.doc.repository.DocumentRepository;
-import com.mac.doc.repository.LabelRepository;
 import com.mac.doc.repository.FunctionRepository;
 import com.mac.doc.repository.FunctionRepositorySupportImpl;
+import com.mac.doc.repository.LabelRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Transactional
@@ -111,7 +113,6 @@ class DocumentServiceTest {
     void diffContents() {
         Document document = Document.builder().docId(1L).build();
         CompareDto dto = documentService.compareDocumentData(document, 4L, 5L);
-
 
 
         System.out.println(dto.getDocument().getContents());
