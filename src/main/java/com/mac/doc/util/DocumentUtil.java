@@ -10,6 +10,7 @@ public class DocumentUtil {
     private static final char MINUS = '-';
     private static final String HEADER = "```diff\n";
     private static final String FOOTER = "\n```";
+
     private DocumentUtil() {
         throw new IllegalStateException("Utility class");
     }

@@ -20,11 +20,15 @@ import java.util.Set;
 public class Function extends Base {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "function")
     private final Set<Document> documents = new HashSet<>();
+
     @Id
     @Column(name = "function_cd")
     private String functionCd;
+
     private String functionNm;
+
     private FunctionType functionType;
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "hold_user_id", referencedColumnName = "user_id")
     private User holdUser;

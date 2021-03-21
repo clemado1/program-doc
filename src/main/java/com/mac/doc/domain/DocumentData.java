@@ -1,7 +1,6 @@
 package com.mac.doc.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.mac.doc.domain.type.DocStat;
 import lombok.*;
@@ -26,7 +25,6 @@ public class DocumentData extends Base {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "doc_id")
-    @JsonIgnore
     private Document document;
 
     @Column(nullable = false)

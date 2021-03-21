@@ -15,8 +15,6 @@ public interface DocumentService {
 
     boolean publishDocument(DocumentData docData);
 
-    boolean validateWriter(Long docId);
-
     Document updateDocument(Document doc);
 
     DocumentDto findDocument(Document document);

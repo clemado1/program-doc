@@ -8,8 +8,6 @@ import com.mac.doc.dto.DocumentDto;
 import com.mac.doc.repository.DocumentDataRepository;
 import com.mac.doc.repository.DocumentRepository;
 import com.mac.doc.util.DocumentUtil;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,16 +55,6 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public boolean validateWriter(Long docId) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDetails userDetails = (UserDetails) principal;
-
-        return documentRepository.findById(docId)
-                .map(document -> document.getFunction().getHoldUser().getUserId().equals(userDetails.getUsername()))
-                .orElse(false);
-    }
-
-    @Override
     public Document updateDocument(Document doc) {
         return documentRepository.save(doc);
     }
@@ -75,12 +63,12 @@ public class DocumentServiceImpl implements DocumentService {
     public DocumentDto findDocument(Document document) {
         return documentRepository.findById(document.getDocId())
                 .map(document1 -> {
-                    if (document1.getDocumentData() == null) {
+                    if (document1.getDocSn() == null) {
                         return documentDataRepository.findTopByDocumentOrderByDocSnDesc(document)
                                 .map(documentData -> DocumentDto.of(document1, documentData))
                                 .orElseThrow();
                     } else {
-                        return DocumentDto.of(document1, document1.getDocumentData());
+                        return findDocument(document, document1.getDocSn());
                     }
                 })
                 .orElseThrow();

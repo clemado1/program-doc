@@ -28,20 +28,14 @@ public class Document extends Base {
     @JoinColumn(name = "function_cd")
     private Function function = new Function();
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "doc_sn")
-    private DocumentData documentData;
+    private Long docSn;
 
     @Builder
-    public Document(Long docId, Function function, DocumentData documentData, String title) {
+    public Document(Long docId, Function function, String functionCd, Long docSn, String title) {
         this.docId = docId;
         this.title = title;
         this.function = function;
-        this.documentData = documentData;
-    }
-
-    public void setDocumentData(DocumentData documentData) {
-        this.documentData = documentData;
+        this.docSn = docSn;
     }
 
 }
