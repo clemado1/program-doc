@@ -2,18 +2,23 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/doc_common :: docHead"><title></title></head>
 <body>
-<div th:replace="fragments/doc_common :: docBody"></div>
-<input th:id="docId" th:name="docId" th:value="${docId}" type="hidden">
-<input th:id="docSn" th:name="docSn" th:value="${docSn}" type="hidden">
-<h1 th:id="title" th:name="title"></h1>
-<span th:id="docStat" th:name="docStat"></span>
-<div id="toc"></div>
-<button id="write-doc" th:text="New"></button>
-<button id="modify-doc" th:text="Modify"></button>
-<div id="viewer">
-    <strong>Loading...</strong>
-</div>
-<button id="publish-doc" th:text="Publish"></button>
+    <div th:replace="fragments/doc_common :: docBody"></div>
+    <input th:id="docId" th:name="docId" th:value="${docId}" type="hidden">
+    <input th:id="docSn" th:name="docSn" th:value="${docSn}" type="hidden">
+    <h1 th:id="title" th:name="title"></h1>
+    <span th:id="docStat" th:name="docStat"></span>
+    <label for="docSnOp">History: </label>
+    <select th:field="*{docData}"  id="docSnOp">
+        <option value="0">select operator</option>
+        <option th:each="data : ${docData}" th:value="${data.docSn}" th:text="${data.docSn} + ' ' + ${data.rgsnUserNm} + ' ' + ${data.rgsnDttm}"></option>
+    </select>
+    <div id="toc"></div>
+    <button id="write-doc" th:text="New"></button>
+    <button id="modify-doc" th:text="Modify"></button>
+    <div id="viewer">
+        <strong>Loading...</strong>
+    </div>
+    <button id="publish-doc" th:text="Publish"></button>
 <script>
     let docId = document.getElementById("docId").value;
     let docSn = document.getElementById("docSn").value;

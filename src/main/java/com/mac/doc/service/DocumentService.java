@@ -21,6 +21,8 @@ public interface DocumentService {
 
     DocumentDto findDocument(Document document, Long docSn);
 
+    List<DocumentDto.DocData> findAllDocumentSnByDocId(Document document);
+
     CompareDto compareDocumentData(Document document, Long docSn);
 
     CompareDto compareDocumentData(Document document, Long docSn1, Long docSn2);

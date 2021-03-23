@@ -1,5 +1,7 @@
 package com.mac.doc.controller;
 
+import com.mac.doc.domain.Document;
+import com.mac.doc.service.DocumentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ViewController {
+
+    private final DocumentService documentService;
+
+    public ViewController(DocumentService documentService) {
+        this.documentService = documentService;
+    }
 
     @GetMapping("/user/login")
     public String loginForm() {
@@ -33,8 +41,11 @@ public class ViewController {
             @PathVariable("docId") long docId,
             @PathVariable(value = "docSn", required = false) Long docSn,
             Model model) {
+        Document document = Document.builder().docId(docId).build();
+
         model.addAttribute("docId", docId);
         model.addAttribute("docSn", docSn);
+        model.addAttribute("docData", documentService.findAllDocumentSnByDocId(document));
 
         return "/doc/viewForm";
     }

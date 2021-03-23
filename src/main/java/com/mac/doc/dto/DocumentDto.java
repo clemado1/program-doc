@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @Setter
 public class DocumentDto {
@@ -68,6 +71,36 @@ public class DocumentDto {
         }
 
         return documentDto;
+    }
+
+    @Getter
+    public static class DocData {
+        private Long docId;
+        private Long docSn;
+        private Double version;
+        private DocStat docStat;
+        private String rgsnUserNm;
+        private String modiUserNm;
+        private String rgsnDttm;
+        private String modiDttm;
+
+        public DocData() {
+        }
+
+        @Builder
+        public DocData(DocumentData documentData) {
+            this.docId = documentData.getDocument().getDocId();
+            this.docSn = documentData.getDocSn();
+            this.version = documentData.getVersion();
+            this.docStat = documentData.getDocStat();
+            this.rgsnUserNm = documentData.getRgsnUser().getUserNm();
+            this.modiUserNm = documentData.getModiUser().getUserNm();
+
+            DateTimeFormatter ofPattern = DateTimeFormatter.ofPattern("MMM dd yy''");
+
+            this.rgsnDttm = documentData.getRgsnDttm().format(ofPattern);
+            this.modiDttm = documentData.getModiDttm().format(ofPattern);
+        }
     }
 
     public void setDocStat(String docStat) {

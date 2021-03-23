@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
@@ -79,6 +80,14 @@ public class DocumentServiceImpl implements DocumentService {
         return documentDataRepository.findByDocSnAndDocument(docSn, document)
                 .map(documentData -> DocumentDto.of(documentData.getDocument(), documentData))
                 .orElseThrow();
+    }
+
+    @Override
+    public List<DocumentDto.DocData> findAllDocumentSnByDocId(Document document) {
+        return documentDataRepository.findAllByDocumentOrderByDocSn(document)
+                .stream()
+                .map(documentData -> DocumentDto.DocData.builder().documentData(documentData).build())
+                .collect(Collectors.toList());
     }
 
     @Override
