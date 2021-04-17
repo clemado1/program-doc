@@ -53,6 +53,11 @@
             });
     });
 
+    document.getElementById("docSnOp").addEventListener('change', function () {
+        let selDocSn = document.getElementById("docSnOp").value;
+        location.href = `/doc/${docId}/${selDocSn}`;
+    })
+
     let url = docSn && !isNaN(docSn) ?
         `/api/doc/${docId}/${docSn}`
         : `/api/doc/${docId}`
