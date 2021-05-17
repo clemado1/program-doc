@@ -1,0 +1,11 @@
+FROM adoptopenjdk/openjdk11:latest
+VOLUME /tmp
+ARG JAR_FILE=build/libs/*.jar
+RUN echo "${JAR_FILE}"
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+
+# gradle clean jar build
+
+# docker build -f Dockerfile.dev -t clemado1/program-doc .
+# docker run -p 8080:8080 clemado1/program-doc
