@@ -47,22 +47,39 @@ class DocumentServiceTest {
 
     @Test
     void saveDocument() {
+        // given
         Set<Label> labelSet = new HashSet<>();
         Label label1 = Label.builder().labelId(1L).labelNm("label1").build();
         Label label2 = Label.builder().labelId(2L).labelNm("label2").build();
         labelSet.add(label1);
         labelSet.add(label2);
 
-        Function function = Function.builder().functionCd("COM10").functionNm("TEST").build();
+        Function function = Function.builder()
+                .functionCd("COM10")
+                .functionNm("TEST")
+                .build();
 
-        DocumentData documentData = DocumentData.builder().docStat(DocStat.TEMPSAVE).contents("content1").label(labelSet).build();
+        Document doc = Document.builder()
+                .function(function)
+                .title("title1")
+                .build();
 
-        Document doc = Document.builder().documentData(documentData).title("title1").build();
+        DocumentData documentData = DocumentData.builder()
+                .document(doc)
+                .docStat(DocStat.TEMPSAVE)
+                .contents("content1")
+                .label(labelSet)
+                .build();
 
+        // when
+        functionService.saveFunction(function);
         documentService.saveDocument(doc, documentData);
-        DocumentDto newdoc = documentService.findDocument(doc, null);
+        DocumentDto newdoc = documentService.findDocument(doc, documentData.getDocSn());
 
+        // then
         Assertions.assertThat(newdoc.getDocId()).isEqualTo(doc.getDocId());
+        Assertions.assertThat(newdoc.getTitle()).isEqualTo(doc.getTitle());
+        Assertions.assertThat(newdoc.getDocSn()).isEqualTo(documentData.getDocSn());
     }
 
     @Test
@@ -88,7 +105,7 @@ class DocumentServiceTest {
     @Test
     void findDocument() {
         Document document = Document.builder().docId(1L).build();
-        DocumentDto documentDto = new DocumentDto();
+        DocumentDto documentDto;
         documentDto = documentService.findDocument(document);
         Assertions.assertThat(documentDto.getDocSn()).isEqualTo(4L);
         documentDto = documentService.findDocument(document, 4L);
@@ -113,7 +130,6 @@ class DocumentServiceTest {
     void diffContents() {
         Document document = Document.builder().docId(1L).build();
         CompareDto dto = documentService.compareDocumentData(document, 4L, 5L);
-
 
         System.out.println(dto.getDocument().getContents());
 

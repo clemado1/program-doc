@@ -19,7 +19,7 @@ public class ViewController {
 
     @GetMapping("/user/login")
     public String loginForm() {
-        return "/user/loginForm";
+        return "user/loginForm";
     }
 
     @GetMapping(value = {"/doc/write", "/doc/write/{docId}", "/doc/write/{docId}/{docSn}"})
@@ -33,7 +33,7 @@ public class ViewController {
         model.addAttribute("docSn", docSn);
         model.addAttribute("functionCd", functionCd);
 
-        return "/doc/writeForm";
+        return "doc/writeForm";
     }
 
     @GetMapping(value = {"/doc/{docId}", "/doc/{docId}/{docSn}"})
@@ -47,7 +47,7 @@ public class ViewController {
         model.addAttribute("docSn", docSn);
         model.addAttribute("docData", documentService.findAllDocumentSnByDocId(document));
 
-        return "/doc/viewForm";
+        return "doc/viewForm";
     }
 
     @GetMapping(value = {"/doc/diff/{docId}/{docSn1}", "/doc/diff/{docId}/{docSn1}/{docSn2}"})
@@ -60,12 +60,12 @@ public class ViewController {
         model.addAttribute("docSn1", docSn1);
         model.addAttribute("docSn2", docSn2);
 
-        return "/doc/diffForm";
+        return "doc/diffForm";
     }
 
     @GetMapping("/doc/list")
     public String list() {
 
-        return "/doc/listForm";
+        return "doc/listForm";
     }
 }
