@@ -46,7 +46,12 @@
     <div id="new-function">
         <input id="functionCd" name="functionCd" type="text">
         <input id="functionNm" name="functionNm" type="text">
-        <input id="functionType" name="functionType" type="text">
+        <select id="functionType" name="functionType">
+            <option value="USER">사용자</option>
+            <option value="PAY">결제</option>
+            <option value="SERVICE">서비스</option>
+            <option value="COMM">공통</option>
+        </select>
         <button id="form-submit" th:text="Create" type="submit"></button>
     </div>
     <ul id="function-list">

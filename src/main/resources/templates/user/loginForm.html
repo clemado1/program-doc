@@ -20,12 +20,17 @@
                 userId: document.getElementById("userId").value,
                 password: document.getElementById("password").value
             })
-        }).then(res => res.json())
-            .then(json => {
-                localStorage.setItem("jwt", json.token)
-                alert("로그인 되었습니다.");
-                location.href = "/";
-            });
+        }).then(res => {
+            if (!res.ok) {
+                alert("로그인 실패!");
+                throw new Error("Authentication Error " + res.status);
+            }
+            return res.json();
+        }).then(json => {
+            localStorage.setItem("jwt", json.token)
+            alert("로그인 되었습니다.");
+            location.href = "/";
+        });
     });
 </script>
 </body>

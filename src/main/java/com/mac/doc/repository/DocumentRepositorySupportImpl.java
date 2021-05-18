@@ -15,7 +15,7 @@ public class DocumentRepositorySupportImpl implements DocumentRepositorySupport 
     public Long updatePublishedDocSn(Long docId, Long docSn) {
         return queryFactory.update(document)
                 .where(document.docId.eq(docId))
-                .set(document.documentData.docSn, docSn)
+                .set(document.docSn, docSn)
                 .execute();
     }
 }
