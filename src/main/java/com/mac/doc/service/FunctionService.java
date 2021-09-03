@@ -9,6 +9,8 @@ public interface FunctionService {
 
     List<FunctionDto> findFunctions();
 
+    FunctionDto findFunction(String id);
+
     void saveFunction(Function function);
 
     boolean validateWriter(String functionCd);

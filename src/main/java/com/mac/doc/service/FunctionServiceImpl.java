@@ -23,6 +23,11 @@ public class FunctionServiceImpl implements FunctionService {
     }
 
     @Override
+    public FunctionDto findFunction(String id) {
+        return FunctionDto.of(functionRepository.findById(id).orElseThrow());
+    }
+
+    @Override
     public void saveFunction(Function function) {
         functionRepository.save(function);
     }
