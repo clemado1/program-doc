@@ -5,12 +5,12 @@ import com.mac.doc.repository.FunctionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class FunctionServiceTest {
@@ -21,8 +21,8 @@ class FunctionServiceTest {
     FunctionRepository functionRepository;
 
     @Test
-    void createFunction() {
-        FunctionService functionService = new FunctionServiceImpl(functionRepository);
+    void createFunction(@Mock UserService userService) {
+        FunctionService functionService = new FunctionServiceImpl(functionRepository, userService);
         Assertions.assertNotNull(functionService);
     }
 
@@ -43,7 +43,7 @@ class FunctionServiceTest {
     }
 
     @Test
-    void findFunction2() {
+    void findFunction2() throws Exception {
         FunctionDto dto = new FunctionDto();
         dto.setFunctionCd("COM1");
         dto.setFunctionNm("공통");
@@ -56,5 +56,28 @@ class FunctionServiceTest {
         Assertions.assertEquals("공통", functionService.findFunction("COM1").getFunctionNm());
         Assertions.assertThrows(RuntimeException.class, () -> functionService.findFunction("COM2"));
         Assertions.assertNull(functionService.findFunction("COM3"));
+    }
+
+    @Test
+    void findFunction3(@Mock UserService userService) throws Exception {
+        FunctionDto dto = new FunctionDto();
+        dto.setFunctionCd("COM1");
+        dto.setFunctionNm("공통");
+
+        when(functionService.findFunction(any()))
+                .thenReturn(dto)
+                .thenThrow(new RuntimeException())
+                .thenReturn(null);
+
+        functionService.findFunction("COM1");
+
+        verify(userService, times(1)).getSessionUser();
+        verify(userService, never()).loadUserByUsername("clemado1");
+        verifyNoInteractions(userService);
+
+        InOrder inOrder = inOrder(functionService);
+        inOrder.verify(userService).getSessionUser();
+
+
     }
 }

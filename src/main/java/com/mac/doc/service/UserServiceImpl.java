@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.userRepository = userRepository;
     }
 
+
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String userId) {
