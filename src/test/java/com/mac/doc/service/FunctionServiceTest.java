@@ -43,7 +43,7 @@ class FunctionServiceTest {
     }
 
     @Test
-    void findFunction2() throws Exception {
+    void findFunction2() {
         FunctionDto dto = new FunctionDto();
         dto.setFunctionCd("COM1");
         dto.setFunctionNm("공통");
@@ -60,24 +60,23 @@ class FunctionServiceTest {
 
     @Test
     void findFunction3(@Mock UserService userService) throws Exception {
+        // given
+        FunctionService functionService = new FunctionServiceImpl(functionRepository, userService);
+        Assertions.assertNotNull(functionService);
+
         FunctionDto dto = new FunctionDto();
         dto.setFunctionCd("COM1");
         dto.setFunctionNm("공통");
 
-        when(functionService.findFunction(any()))
-                .thenReturn(dto)
-                .thenThrow(new RuntimeException())
-                .thenReturn(null);
+        // when
+        functionService.validateWriter(dto);
 
-        functionService.findFunction("COM1");
-
+        // then
         verify(userService, times(1)).getSessionUser();
         verify(userService, never()).loadUserByUsername("clemado1");
-        verifyNoInteractions(userService);
+        // verifyNoInteractions(userService); Error!
 
-        InOrder inOrder = inOrder(functionService);
+        InOrder inOrder = inOrder(userService);
         inOrder.verify(userService).getSessionUser();
-
-
     }
 }

@@ -9,11 +9,11 @@ public interface FunctionService {
 
     List<FunctionDto> findFunctions();
 
-    FunctionDto findFunction(String id) throws Exception;
+    FunctionDto findFunction(String id);
 
     void saveFunction(Function function);
 
-    boolean validateWriter(String functionCd) throws Exception;
+    boolean validateWriter(FunctionDto functionDto);
 
     boolean holdFunction(String functionCd);
 

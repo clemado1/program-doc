@@ -4,8 +4,6 @@ import com.mac.doc.domain.Function;
 import com.mac.doc.domain.User;
 import com.mac.doc.dto.FunctionDto;
 import com.mac.doc.repository.FunctionRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,8 +24,7 @@ public class FunctionServiceImpl implements FunctionService {
     }
 
     @Override
-    public FunctionDto findFunction(String id) throws Exception {
-        User sessionUser = userService.getSessionUser();
+    public FunctionDto findFunction(String id) {
         return FunctionDto.of(functionRepository.findById(id).orElseThrow());
     }
 
@@ -37,12 +34,17 @@ public class FunctionServiceImpl implements FunctionService {
     }
 
     @Override
-    public boolean validateWriter(String functionCd) throws Exception {
-        User sessionUser = userService.getSessionUser();
+    public boolean validateWriter(FunctionDto functionDto) {
+        try {
+            User sessionUser = userService.getSessionUser();
+            return functionRepository.findById(functionDto.getFunctionCd())
+                    .map(function -> function.getHoldUser().getUserId().equals(sessionUser.getUserId()))
+                    .orElse(false);
 
-        return functionRepository.findById(functionCd)
-                .map(function -> function.getHoldUser().getUserId().equals(sessionUser.getUserId()))
-                .orElse(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
