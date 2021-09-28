@@ -1,6 +1,5 @@
 package com.mac.doc.service;
 
-import com.mac.doc.domain.Function;
 import com.mac.doc.dto.FunctionDto;
 import com.mac.doc.repository.FunctionRepository;
 import org.junit.jupiter.api.Assertions;
@@ -11,19 +10,22 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class FunctionServiceTest {
     @Mock
     FunctionService functionService;
 
-    @Mock
+    @Autowired
     FunctionRepository functionRepository;
 
     @Test
