@@ -2,10 +2,8 @@ package com.mac.doc.service;
 
 import com.mac.doc.dto.FunctionDto;
 import com.mac.doc.repository.FunctionRepository;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -15,7 +13,9 @@ import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.output.Slf4jLogConsumer;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -27,6 +27,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
+@Slf4j
 class FunctionServiceTest {
     @Mock
     FunctionService functionService;
@@ -35,13 +36,25 @@ class FunctionServiceTest {
     FunctionRepository functionRepository;
 
     @Container
-    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres")
-            .withDatabaseName("doctest");
+    static GenericContainer<?> postgreSQLContainer = new GenericContainer<>("postgres")
+            .withExposedPorts(5432)
+            .withEnv("POSTGRES_DB", "doctest")
+            .withEnv("POSTGRES_USER", "doctest")
+            .withEnv("POSTGRES_PASSWORD", "doctest")
+            .waitingFor(Wait.forListeningPort())
+            .withLogConsumer(new Slf4jLogConsumer(log));
 
     @BeforeAll
     static void beforeAll() {
         postgreSQLContainer.start();
-        System.out.println(postgreSQLContainer.getJdbcUrl());
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        System.out.println("postgreSQLContainer = " + postgreSQLContainer.getMappedPort(5432));
+        System.out.println(postgreSQLContainer.getLogs());
+
+        // functionRepository.deleteAll();
     }
 
     @AfterAll
