@@ -3,7 +3,9 @@ package com.mac.doc.service;
 import com.mac.doc.dto.FunctionDto;
 import com.mac.doc.repository.FunctionRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -11,18 +13,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.output.Slf4jLogConsumer;
+import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.junit.jupiter.Container;
+
+import java.io.File;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -34,7 +31,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 @Slf4j
-@ContextConfiguration(initializers = FunctionServiceTest.ContainerPropertyInitializer.class)
 class FunctionServiceTest {
     @Mock
     FunctionService functionService;
@@ -45,36 +41,10 @@ class FunctionServiceTest {
     @Autowired
     Environment environment;
 
-    @Value("${container.port}")
-    int port;
-
-    @Container
-    static GenericContainer<?> postgreSQLContainer = new GenericContainer<>("postgres")
-            .withExposedPorts(5432)
-            .withEnv("POSTGRES_DB", "doctest")
-            .withEnv("POSTGRES_USER", "doctest")
-            .withEnv("POSTGRES_PASSWORD", "doctest")
-            .waitingFor(Wait.forListeningPort())
-            .withLogConsumer(new Slf4jLogConsumer(log));
-
-    @BeforeAll
-    static void beforeAll() {
-        postgreSQLContainer.start();
-    }
-
-    @BeforeEach
-    void beforeEach() {
-        System.out.println("postgreSQLContainer = " + environment.getProperty("container.port"));
-        System.out.println("postgreSQLContainer = " + port);
-        System.out.println(postgreSQLContainer.getLogs());
-
-        // functionRepository.deleteAll();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        postgreSQLContainer.stop();
-    }
+    @ClassRule
+    static DockerComposeContainer<?> composeContainer
+            = new DockerComposeContainer<>(new File("src/test/resources/docker-compose.yml"))
+            .withExposedService("doc-testdb", 5432, Wait.forListeningPort());
 
     @Test
     void createFunction(@Mock UserService userService) {
@@ -140,9 +110,9 @@ class FunctionServiceTest {
      * BDD
      * - Title
      * - Narrative
-     *     - As a / I want / so that
+     * - As a / I want / so that
      * - Acceptance criteria
-     *     - Given / When / Then
+     * - Given / When / Then
      */
     @Test
     void findFunction4(@Mock UserService userService) throws Exception {
@@ -162,15 +132,5 @@ class FunctionServiceTest {
         // then
         then(userService).should().getSessionUser();
 
-    }
-
-    static class ContainerPropertyInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-
-        @Override
-        public void initialize(ConfigurableApplicationContext applicationContext) {
-            TestPropertyValues.of("container.port="+postgreSQLContainer.getMappedPort(5432))
-                    .applyTo(applicationContext.getEnvironment());
-
-        }
     }
 }
