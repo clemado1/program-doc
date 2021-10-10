@@ -7,6 +7,9 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  profiles:
+    active: chaos-monkey
+
 
 logging:
   level:
@@ -21,4 +24,11 @@ server:
   servlet:
     session:
       tracking-modes: cookie
-
+management:
+  endpoint:
+    chaosmonkey:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,chaosmonkey
