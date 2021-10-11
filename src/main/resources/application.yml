@@ -32,3 +32,13 @@ management:
     web:
       exposure:
         include: health,info,chaosmonkey
+
+# chaos monkey 활성화 http post localhost:8080/actuator/chaosmonkey/enable
+# chaos monkey 활성화 확인 http localhost:8080/actuator/chaosmonkey/status
+# chaos monkey watcher 확인 http localhost:8080/actuator/chaosmonkey/watchers
+# chaos monkey 지연 공격 설정 http post localhost:8080/actuator/chaosmonkey/assaults level=3 latencyRangeStart=2000 latencyRangeEnd=5000 latencyActive=true
+chaos:
+  monkey:
+    watcher:
+      repository: true
+
