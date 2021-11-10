@@ -41,4 +41,8 @@ chaos:
   monkey:
     watcher:
       repository: true
+    enabled: true
+
+# 에러 발생 재현 방법
+# http POST localhost:8080/actuator/chaosmonkey/assaults level=3 latencyActive=false exceptionsActive=true exception.type=java.lang.RuntimeException
 
