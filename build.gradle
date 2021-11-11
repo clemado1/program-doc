@@ -53,6 +53,7 @@ dependencies {
     testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.15.3'
     // https://mvnrepository.com/artifact/org.testcontainers/postgresql
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.15.3'
+    testImplementation 'com.tngtech.archunit:archunit:0.22.0'
 
     compile group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
     runtime group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
